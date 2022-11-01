@@ -11,17 +11,17 @@ import com.example.operation_system.bo.RelationBo;
 public class ComputingUtil {
 
     public static RelationBo and(RelationBo r1, RelationBo r2) {
-        // todo
+        // todo manqi
         return null;
     }
 
     public static RelationBo or(RelationBo r1, RelationBo r2) {
-        // todo
+        // todo manqi
         return null;
     }
 
     public static RelationBo diff(RelationBo r1, RelationBo r2) {
-        // todo
+        // todo manqi
         return null;
     }
 
@@ -31,7 +31,7 @@ public class ComputingUtil {
     }
 
     public static RelationBo prod(RelationBo r1, RelationBo r2) {
-        // todo
+        // todo manqi
         return null;
     }
 

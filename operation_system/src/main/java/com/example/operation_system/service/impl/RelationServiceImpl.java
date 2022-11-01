@@ -23,7 +23,7 @@ public class RelationServiceImpl implements RelationService {
     @Override
     public void insertRelation(RelationVo[] relationVos) throws ParamLenException {
         for (RelationVo vo : relationVos) {
-            // TODO: 2022/10/18 把vo->bo的过程转移到bo类内
+            // TODO: 2022/10/18 把vo->bo的过程转移到bo类内 manqi
             String[] colName = getColName(vo);
             String[][] content = getContent(vo);
             RelationBo bo = new RelationBo(vo.getRowLen(), vo.getColLen(), colName, content);
