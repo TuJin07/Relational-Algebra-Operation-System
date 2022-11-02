@@ -1,5 +1,6 @@
 package com.example.operation_system.service;
 
+import com.example.operation_system.bo.RelationBo;
 import com.example.operation_system.exception.ParamLenException;
 import com.example.operation_system.vo.RelationVo;
 
@@ -18,7 +19,26 @@ public interface RelationService {
     void insertRelation(RelationVo[] relationVos) throws ParamLenException;
 
     /**
-     * 删除所有已建立的关系
+     * 删除关系
      */
-    void deleteRelation();
+    void deleteRelation(String name);
+
+    /**
+     * 删除所有已建立关系
+     */
+    void deleteAll();
+
+    /**
+     * 是否存在名为key的关系
+     * @param key
+     * @return
+     */
+    boolean contains(String key);
+
+    /**
+     * 获取name对应的Bo
+     * @param name
+     * @return
+     */
+    RelationBo get(String name);
 }
