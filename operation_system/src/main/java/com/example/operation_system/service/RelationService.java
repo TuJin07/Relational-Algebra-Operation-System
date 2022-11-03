@@ -3,6 +3,7 @@ package com.example.operation_system.service;
 import com.example.operation_system.bo.RelationBo;
 import com.example.operation_system.exception.ParamLenException;
 import com.example.operation_system.vo.RelationVo;
+import org.springframework.stereotype.Service;
 
 /**
  * @program: operation_system

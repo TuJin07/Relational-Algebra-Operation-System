@@ -2,6 +2,7 @@ package com.example.operation_system.service;
 
 import com.example.operation_system.exception.ComputingException;
 import com.example.operation_system.vo.RelationVo;
+import org.springframework.stereotype.Service;
 
 
 /**

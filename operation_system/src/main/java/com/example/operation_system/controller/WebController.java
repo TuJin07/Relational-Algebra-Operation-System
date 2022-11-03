@@ -81,4 +81,9 @@ public class WebController {
         return Result.success();
     }
 
+    @RequestMapping(value = "/api/is_alive/", method = RequestMethod.GET)
+    public Result isAlive() {
+        return Result.success();
+    }
+
 }

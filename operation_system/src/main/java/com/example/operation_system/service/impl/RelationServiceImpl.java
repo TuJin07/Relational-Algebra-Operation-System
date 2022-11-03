@@ -4,6 +4,7 @@ import com.example.operation_system.bo.RelationBo;
 import com.example.operation_system.exception.ParamLenException;
 import com.example.operation_system.service.RelationService;
 import com.example.operation_system.vo.RelationVo;
+import org.springframework.stereotype.Service;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -13,6 +14,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author: Xuan
  * @create: 2022-10-18 21:09
  **/
+
+@Service
 public class RelationServiceImpl implements RelationService {
 
     /**
