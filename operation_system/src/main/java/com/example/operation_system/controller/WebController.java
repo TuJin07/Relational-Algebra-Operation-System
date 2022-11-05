@@ -1,9 +1,12 @@
 package com.example.operation_system.controller;
 
+import com.example.operation_system.exception.ComputingException;
+import com.example.operation_system.exception.ParamLenException;
 import com.example.operation_system.response.Result;
 import com.example.operation_system.service.ComputingService;
 import com.example.operation_system.service.RelationService;
 import com.example.operation_system.vo.RelationVo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -17,6 +20,7 @@ import javax.annotation.Resource;
 
 @SuppressWarnings("rawtypes")
 @RestController
+@Slf4j
 public class WebController {
 
     @Resource
@@ -29,10 +33,16 @@ public class WebController {
      * 计算表达式结果并返回
      * @return
      */
-    @RequestMapping(value = "/api/compute/", method = RequestMethod.GET)
-    public Result<RelationVo> getCalculationResult() {
-        // todo
-        return null;
+    @RequestMapping(value = "/api/compute/", method = RequestMethod.POST)
+    public Result getCalculationResult(@RequestBody String expression) {
+        RelationVo result = null;
+        try {
+            result = computingService.compute(expression);
+        } catch (ComputingException e) {
+            log.error("[计算]计算异常", e);
+            return Result.fail("计算异常");
+        }
+        return Result.success(result);
     }
 
 
@@ -41,9 +51,39 @@ public class WebController {
      * @return
      */
     @RequestMapping(value = "/api/insert/", method = RequestMethod.POST)
-    public Result insertRelation() {
-        // todo
-        return null;
+    public Result insertRelation(@RequestBody RelationVo[] vos) {
+        try {
+            relationService.insertRelation(vos);
+        } catch (ParamLenException e) {
+            log.error("[新增关系]参数异常", e);
+            return Result.fail("参数异常");
+        }
+        return Result.success();
+    }
+
+    /**
+     * 删除关系
+     * @return
+     */
+    @RequestMapping(value = "/api/delete/", method = RequestMethod.POST)
+    public Result deleteRelation(@RequestBody String name) {
+        relationService.deleteRelation(name);
+        return Result.success();
+    }
+
+    /**
+     * 删除所有关系
+     * @return
+     */
+    @RequestMapping(value = "/api/delete_all/", method = RequestMethod.GET)
+    public Result deleteAll() {
+        relationService.deleteAll();
+        return Result.success();
+    }
+
+    @RequestMapping(value = "/api/is_alive/", method = RequestMethod.GET)
+    public Result isAlive() {
+        return Result.success();
     }
 
 }

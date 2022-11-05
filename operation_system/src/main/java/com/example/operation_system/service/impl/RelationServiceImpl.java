@@ -4,6 +4,7 @@ import com.example.operation_system.bo.RelationBo;
 import com.example.operation_system.exception.ParamLenException;
 import com.example.operation_system.service.RelationService;
 import com.example.operation_system.vo.RelationVo;
+import org.springframework.stereotype.Service;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -13,6 +14,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author: Xuan
  * @create: 2022-10-18 21:09
  **/
+
+@Service
 public class RelationServiceImpl implements RelationService {
 
     /**
@@ -23,7 +26,7 @@ public class RelationServiceImpl implements RelationService {
     @Override
     public void insertRelation(RelationVo[] relationVos) throws ParamLenException {
         for (RelationVo vo : relationVos) {
-            // TODO: 2022/10/18 把vo->bo的过程转移到bo类内 manqi
+            // TODO: 2022/10/18 把vo->bo的过程转移到bo类内 @manqi
             String[] colName = getColName(vo);
             String[][] content = getContent(vo);
             RelationBo bo = new RelationBo(vo.getRowLen(), vo.getColLen(), colName, content);
@@ -32,8 +35,18 @@ public class RelationServiceImpl implements RelationService {
     }
 
     @Override
-    public void deleteRelation() {
+    public void deleteRelation(String name) {
+        relations.remove(name);
+    }
+
+    @Override
+    public void deleteAll() {
         relations.clear();
+    }
+
+    @Override
+    public boolean contains(String key) {
+        return relations.containsKey(key);
     }
 
     public RelationBo get(String name) {
