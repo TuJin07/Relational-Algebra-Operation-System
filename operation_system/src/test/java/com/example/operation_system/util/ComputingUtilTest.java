@@ -14,7 +14,7 @@ class ComputingUtilTest {
 
     private static RelationBo bo2;
 
-    // bo1
+    // bo1 初始化
     private static int bo1RowLen = 2;
 
     private static int bo1ColLen = 2;
@@ -25,7 +25,7 @@ class ComputingUtilTest {
             {"a1", "b1"}, {"a2", "b2"}
     };
 
-    // bo2
+    // bo2 初始化
     private static int bo2RowLen = 2;
 
     private static int bo2ColLen = 3;
@@ -47,7 +47,8 @@ class ComputingUtilTest {
 
     @Test
     void and() {
-
+        RelationBo res = ComputingUtil.and(bo1, bo2);
+        System.out.println(res);
     }
 
     @Test

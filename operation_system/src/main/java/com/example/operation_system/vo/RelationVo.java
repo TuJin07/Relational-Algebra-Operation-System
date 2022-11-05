@@ -1,6 +1,7 @@
 package com.example.operation_system.vo;
 
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * @program: operation_system
@@ -9,6 +10,7 @@ import lombok.Data;
  * @create: 2022-10-18 20:44
  **/
 @Data
+@ToString
 public class RelationVo {
 
     private String name;

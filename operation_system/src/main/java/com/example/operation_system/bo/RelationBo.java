@@ -3,6 +3,7 @@ package com.example.operation_system.bo;
 import com.example.operation_system.exception.ParamLenException;
 import com.example.operation_system.vo.RelationVo;
 import lombok.Getter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -14,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Getter
+@ToString
 public class RelationBo {
 
     private final int rowLen;
