@@ -49,6 +49,13 @@ public class RelationBo {
         return null;
     }
 
+    public RelationBo(RelationBo r) {
+        rowLen = r.rowLen;
+        colLen = r.colLen;
+        colName = r.colName;
+        content = r.content;
+    }
+
     public RelationBo(int rowLen, int colLen, String[] colName, String relation) throws ParamLenException {
         this.rowLen = rowLen;
         this.colLen = colLen;
