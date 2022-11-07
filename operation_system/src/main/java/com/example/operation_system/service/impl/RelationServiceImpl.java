@@ -24,14 +24,12 @@ public class RelationServiceImpl implements RelationService {
     private static final ConcurrentHashMap<String, RelationBo> relations = new ConcurrentHashMap<>();
 
     @Override
-    public void insertRelation(RelationVo[] relationVos) throws ParamLenException {
-        for (RelationVo vo : relationVos) {
-            // TODO: 2022/10/18 把vo->bo的过程转移到bo类内 @manqi
-            String[] colName = getColName(vo);
-            String[][] content = getContent(vo);
-            RelationBo bo = new RelationBo(vo.getRowLen(), vo.getColLen(), colName, content);
-            relations.put(vo.getName(), bo);
-        }
+    public void insertRelation(RelationVo relationVo) throws ParamLenException {
+        // TODO: 2022/10/18 把vo->bo的过程转移到bo类内 @manqi
+        String[] colName = getColName(relationVo);
+        String[][] content = getContent(relationVo);
+        RelationBo bo = new RelationBo(relationVo.getRowLen(), relationVo.getColLen(), colName, content);
+        relations.put(relationVo.getName(), bo);
     }
 
     @Override

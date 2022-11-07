@@ -64,7 +64,7 @@ class ComputingServiceImplTest {
         RelationVo[] vos = new RelationVo[list.size()];
         list.toArray(vos);
         try {
-            relationService.insertRelation(vos);
+            relationService.insertRelation(RelationBo.toRelationVo(bo1, "A"));
         } catch (ParamLenException e) {
             log.error("参数长度错误", e);
         }

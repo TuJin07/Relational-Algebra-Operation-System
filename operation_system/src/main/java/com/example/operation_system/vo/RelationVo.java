@@ -1,5 +1,6 @@
 package com.example.operation_system.vo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.ToString;
 
@@ -13,13 +14,18 @@ import lombok.ToString;
 @ToString
 public class RelationVo {
 
+    @JsonProperty("relation_name")
     private String name;
 
+    @JsonProperty("row_len")
     private int rowLen;
 
+    @JsonProperty("col_len")
     private int colLen;
 
+    @JsonProperty("col_name")
     private String colName;
 
+    @JsonProperty("content")
     private String content;
 }

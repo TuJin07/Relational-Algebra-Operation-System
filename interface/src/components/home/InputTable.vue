@@ -91,13 +91,14 @@ export default {
     },
     // 向后端传表单
     submit () {
+      // todo 1. 取不到值 @serum  2. 回车的处理先删除了，调试没问题后再加上
       this.$axios
         .post('/insert/', {
           'relation_name': this.domains.name,
           'row_len': this.domains.row,
           'col_len': this.domains.col,
           'col_name': this.domains.col_name,
-          'content': this.domains.text.replace(/[\r\n]/g, ',')
+          'content': this.domains.text
         })
         .then(successResponse => {
           if (successResponse.data.code === 200) {

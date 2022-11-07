@@ -14,10 +14,10 @@ import org.springframework.stereotype.Service;
 public interface RelationService {
 
     /**
-     * @param relationVos 前端传来的Relations
+     * @param relationVo 前端传来的Relations
      * @throws ParamLenException 参数不对时抛出此异常
      */
-    void insertRelation(RelationVo[] relationVos) throws ParamLenException;
+    void insertRelation(RelationVo relationVo) throws ParamLenException;
 
     /**
      * 删除关系

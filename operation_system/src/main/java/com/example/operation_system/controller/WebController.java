@@ -52,9 +52,9 @@ public class WebController {
      * @return
      */
     @RequestMapping(value = "/api/insert/", method = RequestMethod.POST)
-    public Result insertRelation(@RequestBody RelationVo[] vos) {
+    public Result insertRelation(@RequestBody RelationVo vo) {
         try {
-            relationService.insertRelation(vos);
+            relationService.insertRelation(vo);
         } catch (ParamLenException e) {
             log.error("[新增关系]参数异常", e);
             return Result.fail("参数异常");
