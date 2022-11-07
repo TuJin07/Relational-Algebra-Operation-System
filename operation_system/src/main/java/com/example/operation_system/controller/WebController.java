@@ -19,6 +19,7 @@ import javax.annotation.Resource;
  **/
 
 @SuppressWarnings("rawtypes")
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @Slf4j
 public class WebController {
