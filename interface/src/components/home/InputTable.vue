@@ -50,7 +50,7 @@ export default {
         this.domains.splice(index, 1)
       }
       this.$axios
-        .post('/delete', {
+        .post('/delete/', {
           'name': item.name
         })
         .then(successResponse => {
@@ -92,7 +92,7 @@ export default {
     // 向后端传表单
     submit () {
       this.$axios
-        .post('/insert`', {
+        .post('/insert/', {
           'relation_name': this.domains.name,
           'row_len': this.domains.row,
           'col_len': this.domains.col,
