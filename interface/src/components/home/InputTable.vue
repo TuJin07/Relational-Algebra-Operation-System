@@ -4,9 +4,10 @@
       <el-form-item v-for="domain in domains" :key="domain.key">
         <el-row>
           关系
-          <el-input v-model="domain.name" style="width: 20%" placeholder="关系名"/>
-          <el-input v-model="domain.row" style="width: 26%" placeholder="行数/元组数"/>
-          <el-input v-model="domain.col" style="width: 26%" placeholder="列数/属性数"/>
+          <el-input v-model="domain.name" style="width: 18%" placeholder="关系名"/>
+          <el-input v-model="domain.row" style="width: 25%" placeholder="行数/元组数"/>
+          <el-input v-model="domain.col" style="width: 25%" placeholder="列数/属性数"/>
+          <el-button @click="submit(domain)">确认关系</el-button>
           <el-button @click.prevent="removeDomain(domain)">删除</el-button>
         </el-row>
         <el-row>
@@ -21,7 +22,6 @@
     <el-row>
       <el-form-item>
         <el-button @click="addDomain">新增关系</el-button>
-        <el-button @click="submit">确认关系</el-button>
         <el-button @click="reset">重置</el-button>
       </el-form-item>
     </el-row>
@@ -90,15 +90,15 @@ export default {
       })
     },
     // 向后端传表单
-    submit () {
+    submit (item) {
       // todo 1. 取不到值 @serum  2. 回车的处理先删除了，调试没问题后再加上
       this.$axios
         .post('/insert/', {
-          'relation_name': this.domains.name,
-          'row_len': this.domains.row,
-          'col_len': this.domains.col,
-          'col_name': this.domains.col_name,
-          'content': this.domains.text
+          'relation_name': item.name,
+          'row_len': item.row,
+          'col_len': item.col,
+          'col_name': item.col_name,
+          'content': item.text
         })
         .then(successResponse => {
           if (successResponse.data.code === 200) {
