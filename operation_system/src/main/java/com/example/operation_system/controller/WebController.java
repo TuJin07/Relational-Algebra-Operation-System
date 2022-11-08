@@ -53,6 +53,18 @@ public class WebController {
      */
     @RequestMapping(value = "/api/insert/", method = RequestMethod.POST)
     public Result insertRelation(@RequestBody RelationVo vo) {
+        if (vo.getName() == null) {
+            return Result.fail("关系名为空");
+        }
+        if (vo.getContent() == null) {
+            return Result.fail("关系内容为空");
+        }
+        if (vo.getColLen() == 0 || vo.getRowLen() == 0) {
+            return Result.fail("列长或行长为空");
+        }
+        if (vo.getColName() == null || vo.getColName().length() != vo.getColLen()) {
+            return Result.fail("列名有误");
+        }
         try {
             relationService.insertRelation(vo);
         } catch (ParamLenException e) {
