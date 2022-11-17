@@ -7,7 +7,7 @@
           <el-input v-model="domain.name" style="width: 18%" placeholder="关系名"/>
           <el-input v-model="domain.row" style="width: 25%" placeholder="行数/元组数"/>
           <el-input v-model="domain.col" style="width: 25%" placeholder="列数/属性数"/>
-          <el-button @click="submit(domain)">确认关系</el-button>
+          <el-button @click="submit(domain)" :disabled="domain.dis">确认关系</el-button>
           <el-button @click.prevent="removeDomain(domain)">删除</el-button>
         </el-row>
         <el-row>
@@ -31,6 +31,7 @@
 <script>
 export default {
   name: 'InputTable',
+  inject: ['reload'],
   data () {
     return {
       domains: [{
@@ -38,7 +39,8 @@ export default {
         row: '',
         col: '',
         col_name: '',
-        text: ''
+        text: '',
+        dis: false
       }]
     }
   },
@@ -86,23 +88,34 @@ export default {
         col: '',
         col_name: '',
         text: '',
+        dis: false,
         key: Date.now()// 获取当前时间作为key，以确保表单的唯一key值
       })
     },
     // 向后端传表单
     submit (item) {
-      // todo 1. 取不到值 @serum  2. 回车的处理先删除了，调试没问题后再加上
       this.$axios
         .post('/insert/', {
           'relation_name': item.name,
           'row_len': item.row,
           'col_len': item.col,
           'col_name': item.col_name,
-          'content': item.text
+          'content': item.text.replace(/\n|\r\n/g, ',') // 用逗号代替换行
         })
         .then(successResponse => {
           if (successResponse.data.code === 200) {
             this.$alert('输入关系表成功！', '确认关系', {
+              confirmButtonText: '确定',
+              callback: action => {
+                this.$message({
+                  type: 'info',
+                  message: `action: ${action}`
+                })
+              }
+            })
+            item.dis = true // 不可二次提交
+          } else if (successResponse.data.code === 400) {
+            this.$alert('输入关系表格式错误！', '确认关系', {
               confirmButtonText: '确定',
               callback: action => {
                 this.$message({
@@ -127,7 +140,34 @@ export default {
     },
     // 重置
     reset () {
-      // .post()
+      this.$axios
+        .get('/delete_all/', {
+        })
+        .then(successResponse => {
+          if (successResponse.data.code === 200) {
+            this.$alert('重置成功！', '重置关系', {
+              confirmButtonText: '确定',
+              callback: action => {
+                this.$message({
+                  type: 'info',
+                  message: `action: ${action}`
+                })
+              }
+            })
+          }
+          this.reload() // 调用刷新
+        })
+        .catch(failResponse => {
+          this.$alert('重置失败！', '重置关系', {
+            confirmButtonText: '确定',
+            callback: action => {
+              this.$message({
+                type: 'info',
+                message: `action: ${action}`
+              })
+            }
+          })
+        })
     }
   }
 }
