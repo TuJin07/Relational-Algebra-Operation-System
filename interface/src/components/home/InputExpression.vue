@@ -108,6 +108,7 @@ export default {
         })
         .then(successResponse => {
           if (successResponse.data.code === 200) {
+            // 返回表格
             let row = successResponse.data.row_len
             let col = successResponse.data.col_len
             let name = successResponse.data.col_name.split(',')
@@ -120,7 +121,7 @@ export default {
                   data: content[j]
                 })
               }
-              content.splice(0, 3)
+              content.splice(0, col)
               this.list.push({
                 id: i,
                 dataList: list
