@@ -11,10 +11,10 @@
           <el-button @click.prevent="removeDomain(domain)">删除</el-button>
         </el-row>
         <el-row>
-          <el-input v-model="domain.col_name" placeholder="列名（用英文逗号分格）"/>
+          <el-input v-model="domain.col_name" style="width: 90%" placeholder="列名（用英文逗号分格）"/>
         </el-row>
         <el-row>
-          <el-input v-model="domain.text"
+          <el-input v-model="domain.text" style="width: 90%"
                     type="textarea" autosize placeholder="输入关系表，属性间以英文逗号分隔，行间以回车分隔"/>
         </el-row>
       </el-form-item>
