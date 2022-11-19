@@ -1,13 +1,34 @@
 <template>
   <div id="app">
 <!--    <img src="./assets/logo.png">-->
-    <router-view/>
+    <router-view v-if="isRouterAlive"/>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  // 自定义
+  provide () {
+    return {
+      reload: this.reload
+    }
+  },
+  data () {
+    return {
+      // 定义状态
+      isRouterAlive: true
+    }
+  },
+  methods: {
+    // 重置
+    reload () {
+      this.isRouterAlive = false
+      this.$nextTick(() => {
+        this.isRouterAlive = true
+      })
+    }
+  }
 }
 </script>
 
