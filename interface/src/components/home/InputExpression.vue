@@ -17,6 +17,21 @@
       <el-button @click="submit">提交</el-button>
     </el-form-item>
 
+<!--    <el-dialog :visible.sync="dialogTableVisible">-->
+<!--      <el-table>-->
+<!--      </el-table>-->
+<!--    </el-dialog>-->
+    <el-table :data="list">
+      <el-table-column label="id" prop="id"></el-table-column>
+      <!-- slot="header"是为了插入表头的，这里遍历list[0],是因为表头都一样，所以取第一行数据的字段做为表头即可 -->
+      <el-table-column v-for="(item, index) in list[0].dataList" :key="index">
+        <template slot="header">
+          {{item.num}}
+        </template>
+        <!-- index对应下面动态列（dataList）的索引，取出值渲染 -->
+        <template slot-scope="scope">{{scope.row.dataList[index].data}}</template>
+      </el-table-column>
+    </el-table>
   </el-form>
 </template>
 
@@ -43,6 +58,13 @@ export default {
       //   name: '⋈'
       // }, {
       //   name: '÷'
+      }],
+      list: [{
+        id: '',
+        dataList: [{
+          num: '',
+          data: ''
+        }]
       }]
     }
   },
@@ -83,6 +105,38 @@ export default {
       this.$axios
         .post('/compute/', {
           'expression': ans
+        })
+        .then(successResponse => {
+          if (successResponse.data.code === 200) {
+            let row = successResponse.data.row_len
+            let col = successResponse.data.col_len
+            let name = successResponse.data.col_name.split(',')
+            let content = successResponse.data.content.split(',')
+            for (let i = 1; i <= row; i++) {
+              let list = []
+              for (let j = 0; j < col; j++) {
+                list.push({
+                  num: name[j],
+                  data: content[j]
+                })
+              }
+              content.splice(0, 3)
+              this.list.push({
+                id: i,
+                dataList: list
+              })
+            }
+          } else if (successResponse.data.code === 400) {
+            this.$alert('提交错误！', '计算表达式', {
+              confirmButtonText: '确定',
+              callback: action => {
+                this.$message({
+                  type: 'info',
+                  message: `action: ${action}`
+                })
+              }
+            })
+          }
         })
     }
   }
