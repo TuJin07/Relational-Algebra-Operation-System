@@ -53,6 +53,18 @@ public class WebController {
      */
     @RequestMapping(value = "/api/insert/", method = RequestMethod.POST)
     public Result insertRelation(@RequestBody RelationVo vo) {
+        if (vo.getName() == null) {
+            return Result.fail("关系名为空");
+        }
+        if (vo.getContent() == null) {
+            return Result.fail("关系内容为空");
+        }
+        if (vo.getColLen() == 0 || vo.getRowLen() == 0) {
+            return Result.fail("列长或行长为空");
+        }
+        if (vo.getColName() == null || vo.getColName().split(",").length != vo.getColLen()) {
+            return Result.fail("列名有误");
+        }
         try {
             relationService.insertRelation(vo);
         } catch (ParamLenException e) {
@@ -85,6 +97,17 @@ public class WebController {
     @RequestMapping(value = "/api/is_alive/", method = RequestMethod.GET)
     public Result isAlive() {
         return Result.success();
+    }
+
+    @RequestMapping(value = "/api/test/", method = RequestMethod.POST)
+    public Result test() {
+        RelationVo vo = new RelationVo();
+        vo.setColLen(2);
+        vo.setRowLen(2);
+        vo.setColName("A, B");
+        vo.setName("result");
+        vo.setContent("a,b,c,d");
+        return Result.success(vo);
     }
 
 }
