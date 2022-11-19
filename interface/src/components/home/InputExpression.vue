@@ -103,20 +103,20 @@ export default {
         else if (n === '×') ans = s.substring(0, i) + ' #prod ' + s.substring(i + 1, s.length)
       }
       this.$axios
-        .post('/compute/', {
+        .post('/test/', {
           'expression': ans
         })
         .then(successResponse => {
           if (successResponse.data.code === 200) {
             // 返回表格
-            let row = successResponse.data.row_len
-            let col = successResponse.data.col_len
-            let name = successResponse.data.col_name.split(',')
-            let content = successResponse.data.content.split(',')
+            let row = successResponse.data.data.row_len
+            let col = successResponse.data.data.col_len
+            let name = successResponse.data.data.col_name.split(',')
+            let content = successResponse.data.data.content.split(',')
             for (let i = 1; i <= row; i++) {
-              let list = []
+              let l = []
               for (let j = 0; j < col; j++) {
-                list.push({
+                l.push({
                   num: name[j],
                   data: content[j]
                 })
@@ -124,9 +124,10 @@ export default {
               content.splice(0, col)
               this.list.push({
                 id: i,
-                dataList: list
+                dataList: l
               })
             }
+            this.list.splice(0, 1)
           } else if (successResponse.data.code === 400) {
             this.$alert('提交错误！', '计算表达式', {
               confirmButtonText: '确定',
