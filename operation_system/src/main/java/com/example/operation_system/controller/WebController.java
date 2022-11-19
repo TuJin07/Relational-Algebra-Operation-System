@@ -62,7 +62,7 @@ public class WebController {
         if (vo.getColLen() == 0 || vo.getRowLen() == 0) {
             return Result.fail("列长或行长为空");
         }
-        if (vo.getColName() == null || vo.getColName().length() != vo.getColLen()) {
+        if (vo.getColName() == null || vo.getColName().split(",").length != vo.getColLen()) {
             return Result.fail("列名有误");
         }
         try {
@@ -97,6 +97,17 @@ public class WebController {
     @RequestMapping(value = "/api/is_alive/", method = RequestMethod.GET)
     public Result isAlive() {
         return Result.success();
+    }
+
+    @RequestMapping(value = "/api/test/", method = RequestMethod.POST)
+    public Result test() {
+        RelationVo vo = new RelationVo();
+        vo.setColLen(2);
+        vo.setRowLen(2);
+        vo.setColName("A, B");
+        vo.setName("result");
+        vo.setContent("a,b,c,d");
+        return Result.success(vo);
     }
 
 }
