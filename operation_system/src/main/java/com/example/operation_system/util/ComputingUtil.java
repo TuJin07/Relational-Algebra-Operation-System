@@ -15,34 +15,32 @@ public class ComputingUtil {
 
     //1 -----------并-----------
     //合并两个集合，去掉重复的
-    public static RelationBo and(RelationBo r1, RelationBo r2){
+    public static RelationBo and(RelationBo r1, RelationBo r2) {
         // todo @manqi
-        //首先取r1一行与r2的每一行对比，如果无重复则加入字符串str，用逗号分开
-        String str = "";
+        // 思路：取r1一行与r2的每一行对比，如果无重复则加入字符串str，用逗号分开
         int rowLen = 0;
+        String str = "";
         for(int i=0;i<r1.getRowLen();i++){
             Boolean isRepead = false;
             for(int j=0;j<r2.getRowLen();j++){
                 if(isSame(r1,r2,i,j)){
                     isRepead = true;
-                    break;
                 }
             }
             if(!isRepead){
-                addStr(r1,i,str);
+                str = addStr(r1,i,str);
                 rowLen++;
             }
         }
-        //其次将r2加入str
         for(int i=0;i<r2.getRowLen();i++){
-            addStr(r2,i,str);
+            str = addStr(r2,i,str);
             rowLen++;
         }
         try {
             RelationBo r3 = new RelationBo(rowLen,r1.getColLen(),r1.getColName(),str);
             return r3;
         }catch (ParamLenException e){
-            System.out.print("不知道哪里有问题");
+            System.out.print("参数长度错误");
         }
         return null;
     }
@@ -52,26 +50,21 @@ public class ComputingUtil {
     public static RelationBo or(RelationBo r1, RelationBo r2) {
         // todo @manqi
         //取r1一行与r2的每一行对比，如果重复则加入字符串str，用逗号分开
-        String str = "";
         int rowLen = 0;
+        String str = "";
         for(int i=0;i<r1.getRowLen();i++){
-            Boolean isRepead = false;
             for(int j=0;j<r2.getRowLen();j++){
                 if(isSame(r1,r2,i,j)){
-                    isRepead = true;
-                    break;
+                    str = addStr(r1,i,str);
+                    rowLen++;
                 }
-            }
-            if(isRepead){
-                addStr(r1,i,str);
-                rowLen++;
             }
         }
         try {
             RelationBo r3 = new RelationBo(rowLen,r1.getColLen(),r1.getColName(),str);
             return r3;
         }catch (ParamLenException e){
-            System.out.print("不知道哪里有问题");
+            System.out.print("参数长度错误");
         }
         return null;
     }
@@ -81,18 +74,17 @@ public class ComputingUtil {
     public static RelationBo diff(RelationBo r1, RelationBo r2) {
         // todo @manqi
         //取r1一行与r2的每一行对比，如果不重复则加入字符串str，用逗号分开
-        String str = "";
         int rowLen = 0;
+        String str = "";
         for(int i=0;i<r1.getRowLen();i++){
             Boolean isRepead = false;
             for(int j=0;j<r2.getRowLen();j++){
                 if(isSame(r1,r2,i,j)){
                     isRepead = true;
-                    break;
                 }
             }
             if(!isRepead){
-                addStr(r1,i,str);
+                str = addStr(r1,i,str);
                 rowLen++;
             }
         }
@@ -100,7 +92,7 @@ public class ComputingUtil {
             RelationBo r3 = new RelationBo(rowLen,r1.getColLen(),r1.getColName(),str);
             return r3;
         }catch (ParamLenException e){
-            System.out.print("不知道哪里有问题");
+            System.out.print("参数长度错误");
         }
         return null;
     }
@@ -129,24 +121,26 @@ public class ComputingUtil {
         String str = "";
         for(int i=0;i<r1.getRowLen();i++){
             for(int j=0;j<r2.getRowLen();j++){
-                addStr(r1,i,str);
-                addStr(r2,i,str);
+                str = addStr(r1,i,str);
+                str = addStr(r2,j,str);
             }
         }
+
         try {
             RelationBo r3 = new RelationBo(rowLen,colLen,colName,str);
             return r3;
         }catch (ParamLenException e){
-            System.out.print("不知道哪里有问题");
+            System.out.print("参数长度错误");
         }
         return null;
     }
 
     //辅助方法1：对比表r1的第a行和表r2的第b行是否相同
+    //-已测试
     private static boolean isSame(RelationBo r1,RelationBo r2,int a,int b){
-        int colLen = r1.getColLen();                //列数
-        for(int i=0;i<colLen;i++){
-            if(r1.getElem(a,i)!=r2.getElem(b,i)){
+        int colNum = r1.getColLen();
+        for(int i=0;i<colNum;i++){
+            if(r1.getContent()[a][i]!=r2.getContent()[b][i]){
                 return false;
             }
         }
@@ -154,11 +148,13 @@ public class ComputingUtil {
     }
 
     //辅助方法2：把表r第i行加入字符串str
-    private static void addStr(RelationBo r,int i,String str){
-        for(int j=0;j<r.getColLen();j++){
-            str+=r.getElem(i,j);
+    //-已测试
+    private static String addStr(RelationBo r,int x,String str){
+        for(int i=0;i<r.getColLen();i++){
+            str+=r.getContent()[x][i];
             str+=",";
         }
+        return str;
     }
 
     public static RelationBo div(RelationBo r1, RelationBo r2) {

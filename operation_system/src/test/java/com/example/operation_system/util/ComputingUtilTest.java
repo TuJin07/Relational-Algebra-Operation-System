@@ -28,12 +28,12 @@ class ComputingUtilTest {
     // bo2 初始化
     private static int bo2RowLen = 2;
 
-    private static int bo2ColLen = 3;
+    private static int bo2ColLen = 2;
 
-    private static String[] bo2ColName = {"C", "D", "E"};
+    private static String[] bo2ColName = {"C","D"};
 
     private static String[][] bo2Content = {
-            {"c1", "d1", "e1"}, {"c2", "d2", "e2"}
+            {"c1", "d1"}, {"a2","b2"}
     };
 
     static {
@@ -45,6 +45,7 @@ class ComputingUtilTest {
         }
     }
 
+
     @Test
     void and() {
         RelationBo res = ComputingUtil.and(bo1, bo2);
@@ -53,10 +54,14 @@ class ComputingUtilTest {
 
     @Test
     void or() {
+        RelationBo res = ComputingUtil.or(bo1, bo2);
+        System.out.println(res);
     }
 
     @Test
     void diff() {
+        RelationBo res = ComputingUtil.diff(bo1, bo2);
+        System.out.println(res);
     }
 
     @Test
@@ -65,6 +70,8 @@ class ComputingUtilTest {
 
     @Test
     void prod() {
+        RelationBo res = ComputingUtil.prod(bo1, bo2);
+        System.out.println(res);
     }
 
     @Test
