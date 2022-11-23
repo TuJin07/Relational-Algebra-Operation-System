@@ -4,6 +4,7 @@ import com.example.operation_system.bo.RelationBo;
 import com.example.operation_system.exception.ParamLenException;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * @program: operation_system
@@ -139,7 +140,7 @@ public class ComputingUtil {
     private static boolean isSame(RelationBo r1,RelationBo r2,int a,int b){
         int colNum = r1.getColLen();
         for(int i=0;i<colNum;i++){
-            if(r1.getContent()[a][i]!=r2.getContent()[b][i]){
+            if(!Objects.equals(r1.getContent()[a][i], r2.getContent()[b][i])){
                 return false;
             }
         }
