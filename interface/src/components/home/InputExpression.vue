@@ -103,7 +103,7 @@ export default {
         else if (n === '×') ans = s.substring(0, i) + ' #prod ' + s.substring(i + 1, s.length)
       }
       this.$axios
-        .post('/test/', {
+        .post('/compute/', {
           'expression': ans
         })
         .then(successResponse => {
