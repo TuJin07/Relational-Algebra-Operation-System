@@ -13,9 +13,32 @@ import java.util.ArrayList;
  **/
 public class ComputingUtil {
 
-    //1 -----------并-----------
-    //合并两个集合，去掉重复的
+    //1 -----------交-----------
+    //选出两个关系内相同的元组
     public static RelationBo and(RelationBo r1, RelationBo r2) {
+        // todo @manqi
+        //取r1一行与r2的每一行对比，如果重复则加入字符串str，用逗号分开
+        int rowLen = 0;
+        String str = "";
+        for(int i=0;i<r1.getRowLen();i++){
+            for(int j=0;j<r2.getRowLen();j++){
+                if(isSame(r1,r2,i,j)){
+                    str = addStr(r1,i,str);
+                    rowLen++;
+                }
+            }
+        }
+        try {
+            RelationBo r3 = new RelationBo(rowLen,r1.getColLen(),r1.getColName(),str);
+            return r3;
+        }catch (ParamLenException e){
+            System.out.print("参数长度错误");
+        }
+        return null;
+    }
+    //2 -----------并-----------
+    //合并两个集合，去掉重复的
+    public static RelationBo or(RelationBo r1, RelationBo r2) {
         // todo @manqi
         // 思路：取r1一行与r2的每一行对比，如果无重复则加入字符串str，用逗号分开
         int rowLen = 0;
@@ -35,30 +58,6 @@ public class ComputingUtil {
         for(int i=0;i<r2.getRowLen();i++){
             str = addStr(r2,i,str);
             rowLen++;
-        }
-        try {
-            RelationBo r3 = new RelationBo(rowLen,r1.getColLen(),r1.getColName(),str);
-            return r3;
-        }catch (ParamLenException e){
-            System.out.print("参数长度错误");
-        }
-        return null;
-    }
-
-    //2 -----------交-----------
-    //选出两个关系内相同的元组
-    public static RelationBo or(RelationBo r1, RelationBo r2) {
-        // todo @manqi
-        //取r1一行与r2的每一行对比，如果重复则加入字符串str，用逗号分开
-        int rowLen = 0;
-        String str = "";
-        for(int i=0;i<r1.getRowLen();i++){
-            for(int j=0;j<r2.getRowLen();j++){
-                if(isSame(r1,r2,i,j)){
-                    str = addStr(r1,i,str);
-                    rowLen++;
-                }
-            }
         }
         try {
             RelationBo r3 = new RelationBo(rowLen,r1.getColLen(),r1.getColName(),str);
