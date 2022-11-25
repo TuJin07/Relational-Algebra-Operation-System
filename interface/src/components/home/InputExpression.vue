@@ -113,6 +113,7 @@ export default {
             let col = successResponse.data.data.col_len
             let name = successResponse.data.data.col_name.split(',')
             let content = successResponse.data.data.content.split(',')
+            this.list.splice(0, this.list.length - 1)
             for (let i = 1; i <= row; i++) {
               let l = []
               for (let j = 0; j < col; j++) {
