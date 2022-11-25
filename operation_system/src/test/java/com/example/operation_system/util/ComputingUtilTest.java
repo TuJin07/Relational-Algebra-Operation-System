@@ -30,10 +30,10 @@ class ComputingUtilTest {
 
     private static int bo2ColLen = 2;
 
-    private static String[] bo2ColName = {"C","D"};
+    private static String[] bo2ColName = {"A","B"};
 
     private static String[][] bo2Content = {
-            {"c1", "d1"}, {"a2","b2"}
+            {"a1", "b1"}, {"a2","b3"}
     };
 
     static {

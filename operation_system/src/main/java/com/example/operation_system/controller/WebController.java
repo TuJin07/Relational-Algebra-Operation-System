@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Map;
 
 /**
  * @program: operation_system
@@ -35,10 +36,10 @@ public class WebController {
      * @return
      */
     @RequestMapping(value = "/api/compute/", method = RequestMethod.POST)
-    public Result getCalculationResult(@RequestBody String expression) {
+    public Result getCalculationResult(@RequestBody Map<String, String> input) {
         RelationVo result = null;
         try {
-            result = computingService.compute(expression);
+            result = computingService.compute(input.get("expression"));
         } catch (ComputingException e) {
             log.error("[计算]计算异常", e);
             return Result.fail("计算异常");

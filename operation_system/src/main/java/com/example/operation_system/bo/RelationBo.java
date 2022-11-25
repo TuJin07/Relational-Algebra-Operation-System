@@ -31,16 +31,22 @@ public class RelationBo {
         res.setName(name);
         res.setColLen(bo.getColLen());
         res.setRowLen(bo.getRowLen());
-        String content = null;
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < bo.getRowLen(); i++) {
             for (int j = 0; j < bo.getColLen(); j++) {
-                // todo
+                sb.append(bo.getElem(i, j));
+                sb.append(',');
             }
         }
-        String colName = null;
+        sb.deleteCharAt(sb.length() - 1);
+        String content = sb.toString();
+        sb = new StringBuilder();
         for (int i = 0; i < bo.getColName().length; i++) {
-            // todo
+            sb.append(bo.getColName()[i]);
+            sb.append(',');
         }
+        sb.deleteCharAt(sb.length() - 1);
+        String colName = sb.toString();
         res.setContent(content);
         res.setColName(colName);
         return res;

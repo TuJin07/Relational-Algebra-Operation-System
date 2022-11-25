@@ -75,7 +75,7 @@ public class ComputingServiceImpl implements ComputingService {
            }
            stack.push(res);
         }
-        return null;
+        return stack.peek();
     }
 
     /**
