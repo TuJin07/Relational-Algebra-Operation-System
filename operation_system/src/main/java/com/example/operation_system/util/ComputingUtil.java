@@ -98,7 +98,7 @@ public class ComputingUtil {
     }
 
 
-    //4 笛卡尔积
+    //4 -----------笛卡尔积-----------
     //三元组*三元组=九元组
     public static RelationBo prod(RelationBo r1, RelationBo r2) {
         // todo @manqi
@@ -147,7 +147,7 @@ public class ComputingUtil {
         return true;
     }
 
-    //辅助方法2：把表r第i行加入字符串str
+    //辅助方法2：把表r第x行加入字符串str
     //-已测试
     private static String addStr(RelationBo r,int x,String str){
         for(int i=0;i<r.getColLen();i++){
@@ -157,21 +157,129 @@ public class ComputingUtil {
         return str;
     }
 
-    public static RelationBo div(RelationBo r1, RelationBo r2) {
-        // todo
+    //5 -----------投影-----------
+    //取其中的指定列组成新表
+    public static RelationBo project(RelationBo r, int[] cols) {
+        //5.1 遍历各行找指定列元素加入字符串str
+        String str = "";
+        for(int i=0;i<r.getColLen();i++){
+            for(int j=0;j<cols.length;j++){
+                str+=r.getContent()[i][cols[j]];
+                str+=",";
+            }
+        }
+        //5.2 处理列名
+        String[] colName = new String[cols.length];
+        for(int i=0;i<cols.length;i++){
+            colName[i] = r.getColName()[cols[i]];
+        }
+        //5.3 赋给新表
+        try {
+            RelationBo r3 = new RelationBo(r.getRowLen(),cols.length,colName,str);
+            return r3;
+        }catch (ParamLenException e){
+            System.out.print("参数长度错误");
+        }
         return null;
     }
 
+    //6 -----------除法-----------
+    public static RelationBo div(RelationBo r1, RelationBo r2) {
+        //6.1 先求相同列
+        String temp1 = "";        //相同列在r1中的索引
+        String temp2 = "";        //相同列在r2中的索引
+        String temp3 = "";        //不相同列的名字
+        for(int i=0;i<r1.getColLen();i++){
+            Boolean isColSame = false;
+            for(int j=0;j<r2.getColLen();j++){
+                if(Objects.equals(r1.getColName()[i],r2.getColName()[j])){
+                    temp1+=i;
+                    temp1+=",";
+                    temp2+=j;
+                    temp2+=",";
+                    isColSame = true;
+                    break;
+                }
+            }
+            if(!isColSame){
+                temp3+=r1.getColName()[i];
+                temp3+=",";
+            }
+        }
+        String[] r1ColName = temp1.split(",");
+        String[] r2ColName = temp2.split(",");
+        String[] newColName = temp3.split(",");
+        //6.2 求r2对相同列的投影
+        int[] r1Temp = new int[r1ColName.length];
+        int[] r2Temp = new int[r2ColName.length];
+        for(int i=0;i<r1Temp.length;i++){
+            r1Temp[i] = Integer.parseInt(r1ColName[i]);
+            r2Temp[i] = Integer.parseInt(r2ColName[i]);
+        }
+        RelationBo r2New = project(r2,r2Temp);
+        //6.3 如果r1中某一行的相同列与r2投影的某行相同，则将该行去除相同列加入字符串
+        String str = "";
+        int rowLen = 0;
+        //对于r1的每一行的特定列元素都需要与r2New的每一行对比
+        for(int i=0;i<r1.getRowLen();i++){
+            if(isHasSpecial(r1,r2New,i,r1Temp)){
+                str = deleteSpecialAdd(r1,i,r1Temp,str);
+                rowLen++;
+            }
+        }
+        //6.4 赋给新表
+        try {
+            RelationBo r3 = new RelationBo(rowLen,r1.getColLen()-r1Temp.length,newColName,str);
+            return r3;
+        }catch (ParamLenException e){
+            System.out.println("参数长度错误");
+        }
+        return null;
+    }
+
+    //辅助方法3：检查表r2New中是否含有表r1的第x行的特定列
+    //已测试
+    public static Boolean isHasSpecial(RelationBo r1,RelationBo r2New,int x,int[] r1Temp){
+        //依次检查r2New的每一行是否含有r1指定行的特定列
+        Boolean isHas = false;
+        for(int i=0;i<r2New.getRowLen();i++){
+            isHas = true;
+            for(int j=0;j<r1Temp.length;j++){
+                if(!Objects.equals(r2New.getContent()[i][j],r1.getContent()[x][r1Temp[j]])){
+                    isHas = false;
+                    break;
+                }
+            }
+            if(isHas) return true;
+        }
+        return false;
+    }
+    //辅助方法4：对于表r的第x行，去除特定列int[]，加入字符串str
+    //已测试
+    private static String deleteSpecialAdd(RelationBo r,int x,int[] colName,String str){
+        //检查列i是否为特定列
+        for(int i=0;i<r.getColLen();i++){
+            Boolean isSpecial = false;
+            for(int j=0;j<colName.length;j++){
+                if(i==colName[j]){
+                    isSpecial = true;
+                    break;
+                }
+            }
+            if(!isSpecial){
+                str+=r.getContent()[x][i];
+                str+=",";
+            }
+        }
+        return str;
+    }
+    //0 -----------选择-----------
     public static RelationBo select(RelationBo r, String condition) {
         // TODO: 2022/10/18 待确定接口
         return null;
     }
 
-    public static RelationBo project(RelationBo r, int[] cols) {
-        // TODO: 2022/10/18 待确定接口
-        return null;
-    }
-
+    //0 -----------连接-----------
     public static RelationBo join(RelationBo r1, RelationBo r2) {
         // TODO: 2022/10/18 待确定接口
         return null;

@@ -17,12 +17,12 @@ class ComputingUtilTest {
     // bo1 初始化
     private static int bo1RowLen = 2;
 
-    private static int bo1ColLen = 2;
+    private static int bo1ColLen = 3;
 
-    private static String[] bo1ColName = {"A", "B"};
+    private static String[] bo1ColName = {"A","B","C"};
 
     private static String[][] bo1Content = {
-            {"a1", "b1"}, {"a2", "b2"}
+            {"a1", "b1","c1"}, {"a2", "b2","c2"}
     };
 
     // bo2 初始化
@@ -66,6 +66,8 @@ class ComputingUtilTest {
 
     @Test
     void div() {
+        RelationBo res = ComputingUtil.div(bo1, bo2);
+        System.out.println(res);
     }
 
     @Test
@@ -80,6 +82,9 @@ class ComputingUtilTest {
 
     @Test
     void project() {
+        int[] cols = new int[]{0};
+        RelationBo res = ComputingUtil.project(bo1,cols);
+        System.out.println(res);
     }
 
     @Test
