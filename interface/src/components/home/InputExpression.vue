@@ -50,14 +50,14 @@ export default {
         name: '−'
       }, {
         name: '×'
-      // }, {
-      //   name: 'σ'
-      // }, {
-      //   name: 'π'
-      // }, {
-      //   name: '⋈'
-      // }, {
-      //   name: '÷'
+      }, {
+        name: 'σ'
+      }, {
+        name: 'π'
+      }, {
+        name: '⋈'
+      }, {
+        name: '÷'
       }],
       list: [{
         id: '',
@@ -79,19 +79,28 @@ export default {
       let s1 = ''
       let s2 = ''
       if (this.expression.length < this.cursorIndex) {
-        this.expression = this.expression + lab
+        if (lab === 'σ' || lab === 'π') {
+          this.expression = this.expression + lab + '()'
+        } else {
+          this.expression = this.expression + lab
+        }
       } else {
         s1 = this.expression.toString()
         s2 = this.expression.toString()
-        this.expression = s1.substring(0, this.cursorIndex) +
-          lab +
-          s2.substring(this.cursorIndex, this.expression.length)
+        if (lab === 'σ' || lab === 'π') {
+          this.expression = s1.substring(0, this.cursorIndex) +
+            lab + '()' +
+            s2.substring(this.cursorIndex, this.expression.length)
+        } else {
+          this.expression = s1.substring(0, this.cursorIndex) +
+            lab +
+            s2.substring(this.cursorIndex, this.expression.length)
+        }
       }
       this.$refs.inputArea.focus()
     },
-    // 提交按钮
-    submit () {
-      let ans = this.expression
+    // 提交中的嵌套函数
+    nest (ans) {
       for (let i = 0; i < ans.length; i++) {
         let n = ans[i]
         let s = ans
@@ -101,46 +110,96 @@ export default {
         else if (n === '∩') ans = s.substring(0, i) + ' #and ' + s.substring(i + 1, s.length)
         else if (n === '−') ans = s.substring(0, i) + ' #diff ' + s.substring(i + 1, s.length)
         else if (n === '×') ans = s.substring(0, i) + ' #prod ' + s.substring(i + 1, s.length)
-      }
-      this.$axios
-        .post('/compute/', {
-          'expression': ans
-        })
-        .then(successResponse => {
-          if (successResponse.data.code === 200) {
-            // 返回表格
-            let row = successResponse.data.data.row_len
-            let col = successResponse.data.data.col_len
-            let name = successResponse.data.data.col_name.split(',')
-            let content = successResponse.data.data.content.split(',')
-            this.list.splice(0, this.list.length - 1)
-            for (let i = 1; i <= row; i++) {
-              let l = []
-              for (let j = 0; j < col; j++) {
-                l.push({
-                  num: name[j],
-                  data: content[j]
-                })
-              }
-              content.splice(0, col)
-              this.list.push({
-                id: i,
-                dataList: l
-              })
-            }
-            this.list.splice(0, 1)
-          } else if (successResponse.data.code === 400) {
-            this.$alert('提交错误！', '计算表达式', {
-              confirmButtonText: '确定',
-              callback: action => {
-                this.$message({
-                  type: 'info',
-                  message: `action: ${action}`
-                })
-              }
-            })
+        else if (n === '⋈') ans = s.substring(0, i) + ' #join ' + s.substring(i + 1, s.length)
+        else if (n === '÷') ans = s.substring(0, i) + ' #div ' + s.substring(i + 1, s.length)
+        else if (n === 'σ' || n === 'π') {
+          let x = n
+          let x1 = i + 1
+          let flag = 1
+          while (n !== '(') {
+            i++
+            n = ans[i]
           }
-        })
+          let x2 = i - 1
+          let x3 = i + 1
+          i++
+          // 找到嵌套的最后一个右括号
+          for (;; i++) {
+            n = ans[i]
+            if (n === ')' && flag === 1) break
+            if (n === '(') flag++
+            if (n === ')') flag--
+          }
+          let x4 = i - 1
+          let exp = s.substring(x1, x2 + 1)
+          let list = s.substring(x3, x4 + 1)
+          // 嵌套
+          list = this.nest(list)
+          if (x === 'σ') {
+            ans = s.substring(0, x1 - 1) + '#select(' + list + ',' + exp + ',1)'
+            let len = ans.length
+            ans += s.substring(i + 1, s.length)
+            i = len - 1
+          } else {
+            let name = exp.split(',')
+            ans = s.substring(0, x1 - 1) + '#project(' + list + ','
+            for (let n = 0; n < name.length; n++) {
+              ans += name[n] + ','
+            }
+            ans += name.length + ')'
+            let len = ans.length
+            ans += s.substring(i + 1, s.length)
+            i = len - 1
+          }
+        }
+      }
+      return ans
+    },
+    // 提交按钮
+    submit () {
+      let ans = this.expression
+      console.log(ans)
+      ans = this.nest(ans)
+      console.log(ans)
+      // this.$axios
+      //   .post('/compute/', {
+      //     'expression': ans
+      //   })
+      //   .then(successResponse => {
+      //     if (successResponse.data.code === 200) {
+      //       // 返回表格
+      //       let row = successResponse.data.data.row_len
+      //       let col = successResponse.data.data.col_len
+      //       let name = successResponse.data.data.col_name.split(',')
+      //       let content = successResponse.data.data.content.split(',')
+      //       this.list.splice(0, this.list.length - 1)
+      //       for (let i = 1; i <= row; i++) {
+      //         let l = []
+      //         for (let j = 0; j < col; j++) {
+      //           l.push({
+      //             num: name[j],
+      //             data: content[j]
+      //           })
+      //         }
+      //         content.splice(0, col)
+      //         this.list.push({
+      //           id: i,
+      //           dataList: l
+      //         })
+      //       }
+      //       this.list.splice(0, 1)
+      //     } else if (successResponse.data.code === 400) {
+      //       this.$alert('提交错误！', '计算表达式', {
+      //         confirmButtonText: '确定',
+      //         callback: action => {
+      //           this.$message({
+      //             type: 'info',
+      //             message: `action: ${action}`
+      //           })
+      //         }
+      //       })
+      //     }
+      //   })
     }
   }
 }
