@@ -89,5 +89,7 @@ class ComputingUtilTest {
 
     @Test
     void join() {
+        RelationBo res = ComputingUtil.join(bo1,bo2);
+        System.out.println(res);
     }
 }

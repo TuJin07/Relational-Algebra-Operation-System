@@ -254,7 +254,98 @@ public class ComputingUtil {
         }
         return false;
     }
-    //辅助方法4：对于表r的第x行，去除特定列int[]，加入字符串str
+
+    //7 -----------连接-----------
+    public static RelationBo join(RelationBo r1, RelationBo r2) {
+        // TODO: 2022/10/18 待确定接口
+        //7.1 求相同列
+        String temp1 = "";        //相同列在r1中的索引
+        String temp2 = "";        //相同列在r2中的索引
+        for(int i=0;i<r1.getColLen();i++){
+            for(int j=0;j<r2.getColLen();j++){
+                if(Objects.equals(r1.getColName()[i],r2.getColName()[j])){
+                    temp1+=i;
+                    temp1+=",";
+                    temp2+=j;
+                    temp2+=",";
+                    break;
+                }
+            }
+        }
+        String[] temp1Col = temp1.split(",");
+        String[] temp2Col = temp2.split(",");
+        int[] r1Col = new int[temp1Col.length];
+        int[] r2Col = new int[temp2Col.length];
+        for(int i=0;i<temp1Col.length;i++){
+            r1Col[i] = Integer.parseInt(temp1Col[i]);
+            r2Col[i] = Integer.parseInt(temp2Col[i]);
+        }
+        //7.2 将特定列完全相同的两表中的两行按 A表非特定列+特定列+B表非特定列 的顺序加入字符串
+        String str = "";
+        int rowLen = 0;
+        for(int i=0;i<r1.getRowLen();i++){
+            for(int j=0;j<r2.getRowLen();j++){
+                if(isSpecialSame(r1,r2,i,j,r1Col,r2Col)){
+                    str = deleteSpecialAdd(r1,i,r1Col,str);
+                    str = AddSpecial(r1,i,r1Col,str);
+                    str = deleteSpecialAdd(r2,j,r2Col,str);
+                    rowLen++;
+                }
+            }
+        }
+        //7.3 计算新列名
+        int colLen = r1.getColLen()+r2.getColLen()-r1Col.length;
+        String[] colName = new String[colLen];
+        int n = 0;
+        //先赋表r1中非特殊的部分
+        for(int i=0;i<r1.getColLen();i++){
+            Boolean isSpecial = false;
+            for(int j=0;j<r1Col.length;j++){
+                if(i==r1Col[j]){
+                    isSpecial = true;
+                    break;
+                }
+            }
+            if(!isSpecial){
+                colName[n++] = r1.getColName()[i];
+            }
+        }
+        for(int i=0;i<r1Col.length;i++){
+            colName[n++] = r1.getColName()[r1Col[i]];
+        }
+        for(int i=0;i<r2.getColLen();i++){
+            Boolean isSpecial = false;
+            for(int j=0;j<r2Col.length;j++){
+                if(i==r2Col[j]){
+                    isSpecial = true;
+                    break;
+                }
+            }
+            if(!isSpecial){
+                colName[n++] = r2.getColName()[i];
+            }
+        }
+        //7.3 赋给新表
+        try {
+            RelationBo r3 = new RelationBo(rowLen,colLen,colName,str);
+            return r3;
+        }catch (ParamLenException e){
+            System.out.println("参数长度错误");
+        }
+        return null;
+    }
+
+    //辅助方法4：判断表r1第x行的特定列int[]r1Col和表r2第y行的特定列int[]r2Col是否相等
+    private static Boolean isSpecialSame(RelationBo r1,RelationBo r2,int x,int y,int[] r1Col,int[] r2Col){
+        for(int i=0;i<r1Col.length;i++){
+            if(!Objects.equals(r1.getContent()[x][r1Col[i]],r2.getContent()[y][r2Col[i]])){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    //辅助方法5：对于表r的第x行，去除特定列int[]，加入字符串str
     //已测试
     private static String deleteSpecialAdd(RelationBo r,int x,int[] colName,String str){
         //检查列i是否为特定列
@@ -273,14 +364,18 @@ public class ComputingUtil {
         }
         return str;
     }
-    //0 -----------选择-----------
-    public static RelationBo select(RelationBo r, String condition) {
-        // TODO: 2022/10/18 待确定接口
-        return null;
+
+    //辅助方法6：对于表r的第x行，将其特定列int[]，加入字符串str
+    private static String AddSpecial(RelationBo r,int x,int[] colName,String str){
+        for(int i=0;i<colName.length;i++){
+            str+=r.getContent()[x][colName[i]];
+            str+=",";
+        }
+        return str;
     }
 
-    //0 -----------连接-----------
-    public static RelationBo join(RelationBo r1, RelationBo r2) {
+    //0 -----------选择-----------
+    public static RelationBo select(RelationBo r, String condition) {
         // TODO: 2022/10/18 待确定接口
         return null;
     }
