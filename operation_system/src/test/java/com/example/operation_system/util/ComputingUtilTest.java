@@ -22,7 +22,7 @@ class ComputingUtilTest {
     private static String[] bo1ColName = {"A","B","C"};
 
     private static String[][] bo1Content = {
-            {"a1", "b1","c1"}, {"a2", "b2","c2"}
+            {"1", "b1","c1"}, {"2", "b2","c2"}
     };
 
     // bo2 初始化
@@ -78,6 +78,8 @@ class ComputingUtilTest {
 
     @Test
     void select() {
+        RelationBo res = ComputingUtil.select(bo1,"A>0");
+        System.out.println(res);
     }
 
     @Test

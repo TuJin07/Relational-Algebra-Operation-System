@@ -374,9 +374,67 @@ public class ComputingUtil {
         return str;
     }
 
-    //0 -----------选择-----------
+    //8 -----------选择-----------
     public static RelationBo select(RelationBo r, String condition) {
         // TODO: 2022/10/18 待确定接口
+        //8.1 处理condition，>|<一般是数字(double)，=一般是字符串(String)
+        String[] temp = condition.split(">|<|=");
+        String sysmbol = isWhat(condition);
+        String colName = temp[0];
+        String content = temp[1];
+        //8.2 判断并加入新字符串
+        String str = "";
+        int rowLen = 0;
+
+        if(Objects.equals(sysmbol,">")){
+            int num = r.getColIndexByName(colName);
+            double contentDou = Double.parseDouble(content);
+            for(int i=0;i<r.getRowLen();i++){
+                if(Double.parseDouble(r.getContent()[i][num])>contentDou){
+                    str = addStr(r,i,str);
+                    rowLen++;
+                }
+            }
+        }
+
+        else if(Objects.equals(sysmbol,"<")){
+            int num = r.getColIndexByName(colName);
+            double contentDou = Double.parseDouble(content);
+            for(int i=0;i<r.getRowLen();i++){
+                if(Double.parseDouble(r.getContent()[i][num])>contentDou){
+                    str = addStr(r,i,str);
+                    rowLen++;
+                }
+            }
+        }
+
+        else if(Objects.equals(sysmbol,"=")){
+            int num = r.getColIndexByName(colName);
+            for(int i=0;i<r.getRowLen();i++){
+                if(Objects.equals(r.getContent()[i][num],content)){
+                    str = addStr(r,i,str);
+                    rowLen++;
+                }
+            }
+        }
+        //8.3 赋给新表
+        try {
+            RelationBo r3 = new RelationBo(rowLen,r.getColLen(),r.getColName(),str);
+            return r3;
+        }catch (ParamLenException e){
+            System.out.println("参数长度错误");
+        }
+        return null;
+    }
+
+    //辅助方法7：判断中间符号是什么(>|<|=)
+    private static String isWhat(String condition){
+        String[] temp1 = condition.split(">");
+        if(temp1.length!=1) return ">";
+        String[] temp2 = condition.split("<");
+        if(temp2.length!=1) return "<";
+        String[] temp3 = condition.split("=");
+        if(temp3.length!=1) return "=";
         return null;
     }
 }
