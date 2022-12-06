@@ -3,6 +3,7 @@ package com.example.operation_system.service.impl;
 import com.example.operation_system.bo.RelationBo;
 import com.example.operation_system.constant.Constant;
 import com.example.operation_system.exception.ComputingException;
+import com.example.operation_system.exception.ParamLenException;
 import com.example.operation_system.service.ComputingService;
 import com.example.operation_system.service.RelationService;
 import com.example.operation_system.util.ComputingUtil;
@@ -47,17 +48,28 @@ public class ComputingServiceImpl implements ComputingService {
      */
     private RelationBo calculate(String expression) throws ComputingException {
         // todo 剩余四种运算完善
-        List<String> post = parse(expression);
+        List<String> post = null;
+        try {
+            post = parse(expression);
+        } catch (ParamLenException e) {
+            log.error("临时关系生成错误", e);
+            throw new ComputingException();
+        }
         Deque<RelationBo> stack = new ArrayDeque<>();
         for (String elem : post) {
            if (relationService.contains(elem)) {
                stack.push(relationService.get(elem));
                continue;
            }
-           String operation = elem;
            RelationBo bo1 = stack.poll(), bo2 = stack.poll();
+           if (bo1 == null || bo2 == null) {
+               throw new ComputingException();
+           }
            RelationBo res = null;
-           switch (operation) {
+           switch (elem) {
+               case Constant.JOIN:
+                   res = ComputingUtil.join(bo1, bo2);
+                   break;
                case Constant.AND:
                    res = ComputingUtil.and(bo1, bo2);
                    break;
@@ -79,19 +91,27 @@ public class ComputingServiceImpl implements ComputingService {
     }
 
     /**
-     * 中缀转后缀
+     * 中缀转后缀，并处理单目运算符
      * @param expression
      * @return
      */
-    private List<String> parse(String expression) {
+    private List<String> parse(String expression) throws ComputingException, ParamLenException {
         String[] elems = expression.split(" ");
         List<String> res = new ArrayList<>();
         Deque<String> stack = new ArrayDeque<>();
+        // 临时表计数
+        int tempCount = 0;
         for (String elem : elems) {
+            // elem为已定义的关系
             if (relationService.contains(elem)) {
                 res.add(elem);
                 continue;
             }
+            // 处理单目运算符
+            if (Constant.UNARY_OPERATOR.contains(elem)) {
+                tempCount = preprocessingUnaryOperator(res, tempCount, elem);
+            }
+            // elem为括号或是栈空且elem为多目运算符时，直接入栈
             if (elem.equals("(") || (elem.charAt(0) == '#') && stack.isEmpty()) {
                 stack.push(elem);
                 continue;
@@ -114,5 +134,72 @@ public class ComputingServiceImpl implements ComputingService {
             res.add(stack.poll());
         }
         return res;
+    }
+
+    /**
+     * 获取单目运算符的参数
+     * @param elem
+     * @return
+     */
+    private String[] getParam(String elem) {
+        int startIndex = 0, endIndex = 0;
+        for (int i = 0; i < elem.length(); i++) {
+            if (elem.charAt(i) == '(') {
+                startIndex = i + 1;
+                break;
+            }
+        }
+        String[] temp = elem.substring(startIndex, elem.length() - 1).split(",");
+        int paramLen = Integer.parseInt(temp[temp.length - 1]);
+        List<String> result = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        int j = 0, k = 0;
+        for (j = 0; j < temp.length - 1 - paramLen; j++) {
+            sb.append(temp[j]);
+        }
+        result.add(sb.toString());
+        for (k = j; k < temp.length - 1; k++) {
+            result.add(temp[k]);
+        }
+        String[] res = new String[result.size()];
+        result.toArray(res);
+        return res;
+    }
+
+    private int preprocessingUnaryOperator(List<String> res, int tempCount, String elem) throws ComputingException, ParamLenException {
+
+        // 第0个参数为关系（或是嵌套表达式），其余参数为运算的参数
+        String[] params = getParam(elem);
+        if (params.length <= 1) {
+            log.error("getParam出错");
+            throw new ComputingException();
+        }
+        RelationBo tmp = null;
+        // params[0]本身已经是已定义的关系则直接取用，否则递归计算表达式
+        if (relationService.contains(params[0])) {
+            tmp = relationService.get(params[0]);
+        } else {
+            tmp = calculate(params[0]);
+        }
+        String tempRelationName = Constant.TEMP_RELATION_PREFIX + tempCount;
+        if (Constant.SELECT.equals(elem)) {     // 选择运算处理
+            RelationBo selectResult = ComputingUtil.select(tmp, params[1]);
+            relationService.insertRelation(selectResult, tempRelationName);
+            res.add(tempRelationName);
+            tempCount++;
+        }
+        if (Constant.PROJECT.equals(elem)) {    // 投影运算处理
+            String[] projectColName = new String[params.length - 1];
+            System.arraycopy(params, 1, projectColName, 0, params.length - 1);
+            int[] projectColNo = new int[projectColName.length];
+            for (int i = 0; i < projectColName.length; i++) {
+                projectColNo[i] = tmp.getColIndexByName(projectColName[i]);
+            }
+            RelationBo projectResult = ComputingUtil.project(tmp, projectColNo);
+            relationService.insertRelation(projectResult, tempRelationName);
+            res.add(tempRelationName);
+            tempCount++;
+        }
+        return tempCount;
     }
 }

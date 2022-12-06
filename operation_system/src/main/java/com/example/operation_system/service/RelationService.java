@@ -19,6 +19,8 @@ public interface RelationService {
      */
     void insertRelation(RelationVo relationVo) throws ParamLenException;
 
+    void insertRelation(RelationBo relationBo, String name) throws ParamLenException;
+
     /**
      * 删除关系
      */

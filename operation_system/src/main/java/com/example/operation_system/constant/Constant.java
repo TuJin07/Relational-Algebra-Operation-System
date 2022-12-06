@@ -1,7 +1,9 @@
 package com.example.operation_system.constant;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @program: operation_system
@@ -27,18 +29,26 @@ public class Constant {
 
     public static final String JOIN = "#join";
 
+    public static final Set<String> UNARY_OPERATOR;
+
     public static final Map<String, Integer> PRIORITY;
+
+    public static final String TEMP_RELATION_PREFIX = "TEMP";
 
     static {
         PRIORITY = new HashMap<>();
         PRIORITY.put("(", 0);
         PRIORITY.put(SELECT, 1);
         PRIORITY.put(PROJECT, 1);
-        PRIORITY.put(JOIN, 1);
-        PRIORITY.put(PROD, 2);
-        PRIORITY.put(DIV, 2);
-        PRIORITY.put(AND, 3);
-        PRIORITY.put(OR, 4);
+        PRIORITY.put(JOIN, 2);
+        PRIORITY.put(PROD, 3);
+        PRIORITY.put(DIV, 3);
+        PRIORITY.put(AND, 4);
+        PRIORITY.put(OR, 5);
+
+        UNARY_OPERATOR = new HashSet<>();
+        UNARY_OPERATOR.add(PROJECT);
+        UNARY_OPERATOR.add(SELECT);
     }
 
 

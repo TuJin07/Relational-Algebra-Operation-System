@@ -33,6 +33,11 @@ public class RelationServiceImpl implements RelationService {
     }
 
     @Override
+    public void insertRelation(RelationBo relationBo, String name) throws ParamLenException {
+        insertRelation(RelationBo.toRelationVo(relationBo, name));
+    }
+
+    @Override
     public void deleteRelation(String name) {
         relations.remove(name);
     }
