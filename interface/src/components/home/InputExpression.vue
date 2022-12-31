@@ -1,5 +1,7 @@
 <template>
   <el-form>
+    <h3 style="float: left">输入表达式</h3>
+    <br><br><br><br>
     <el-form-item>
       <el-input v-model="expression"
                 @blur="handleInputBlur"
@@ -21,6 +23,8 @@
 <!--      <el-table>-->
 <!--      </el-table>-->
 <!--    </el-dialog>-->
+    <h3 style="float: left">结果表</h3>
+    <br><br><br><br>
     <el-table :data="list">
       <el-table-column label="id" prop="id"></el-table-column>
       <!-- slot="header"是为了插入表头的，这里遍历list[0],是因为表头都一样，所以取第一行数据的字段做为表头即可 -->

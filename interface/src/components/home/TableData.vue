@@ -1,6 +1,8 @@
 <template>
   <el-form>
-    学生表 Student<el-button @click="submitStudent" style="float: right">添加</el-button>
+    <h3 style="float: left">添加现成表</h3>
+    <br><br><br><br>
+    <strong>学生表 Student</strong><el-button @click="submitStudent" style="float: right">添加</el-button>
     <el-table
       :data="Student"
       style="width: 100%">
@@ -23,7 +25,8 @@
         label="Sage">
       </el-table-column>
     </el-table>
-    课程表 Course<el-button @click="submitCourse" style="float: right">添加</el-button>
+    <br>
+    <strong>课程表 Course</strong><el-button @click="submitCourse" style="float: right">添加</el-button>
     <el-table
       :data="Course"
       style="width: 100%">
@@ -42,7 +45,8 @@
         label="Ccredit">
       </el-table-column>
     </el-table>
-    成绩表 SC<el-button @click="submitSC" style="float: right">添加</el-button>
+    <br>
+    <strong>成绩表 SC</strong><el-button @click="submitSC" style="float: right">添加</el-button>
     <el-table
       :data="SC"
       style="width: 100%">

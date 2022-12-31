@@ -1,6 +1,8 @@
 <template>
   <el-form>
     <el-row>
+      <h3 style="float: left">添加自定义表</h3>
+      <br><br><br><br>
       <el-form-item v-for="domain in domains" :key="domain.key">
         <el-row>
           关系
