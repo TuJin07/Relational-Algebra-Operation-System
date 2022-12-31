@@ -158,48 +158,48 @@ export default {
     // 提交按钮
     submit () {
       let ans = this.expression
-      console.log(ans)
+      // console.log(ans)
       ans = this.nest(ans)
-      console.log(ans)
-      // this.$axios
-      //   .post('/compute/', {
-      //     'expression': ans
-      //   })
-      //   .then(successResponse => {
-      //     if (successResponse.data.code === 200) {
-      //       // 返回表格
-      //       let row = successResponse.data.data.row_len
-      //       let col = successResponse.data.data.col_len
-      //       let name = successResponse.data.data.col_name.split(',')
-      //       let content = successResponse.data.data.content.split(',')
-      //       this.list.splice(0, this.list.length - 1)
-      //       for (let i = 1; i <= row; i++) {
-      //         let l = []
-      //         for (let j = 0; j < col; j++) {
-      //           l.push({
-      //             num: name[j],
-      //             data: content[j]
-      //           })
-      //         }
-      //         content.splice(0, col)
-      //         this.list.push({
-      //           id: i,
-      //           dataList: l
-      //         })
-      //       }
-      //       this.list.splice(0, 1)
-      //     } else if (successResponse.data.code === 400) {
-      //       this.$alert('提交错误！', '计算表达式', {
-      //         confirmButtonText: '确定',
-      //         callback: action => {
-      //           this.$message({
-      //             type: 'info',
-      //             message: `action: ${action}`
-      //           })
-      //         }
-      //       })
-      //     }
-      //   })
+      // console.log(ans)
+      this.$axios
+        .post('/compute/', {
+          'expression': ans
+        })
+        .then(successResponse => {
+          if (successResponse.data.code === 200) {
+            // 返回表格
+            let row = successResponse.data.data.row_len
+            let col = successResponse.data.data.col_len
+            let name = successResponse.data.data.col_name.split(',')
+            let content = successResponse.data.data.content.split(',')
+            this.list.splice(0, this.list.length - 1)
+            for (let i = 1; i <= row; i++) {
+              let l = []
+              for (let j = 0; j < col; j++) {
+                l.push({
+                  num: name[j],
+                  data: content[j]
+                })
+              }
+              content.splice(0, col)
+              this.list.push({
+                id: i,
+                dataList: l
+              })
+            }
+            this.list.splice(0, 1)
+          } else if (successResponse.data.code === 400) {
+            this.$alert('提交错误！', '计算表达式', {
+              confirmButtonText: '确定',
+              callback: action => {
+                this.$message({
+                  type: 'info',
+                  message: `action: ${action}`
+                })
+              }
+            })
+          }
+        })
     }
   }
 }

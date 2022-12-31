@@ -5,8 +5,8 @@
         <el-row>
           关系
           <el-input v-model="domain.name" style="width: 18%" placeholder="关系名"/>
-          <el-input v-model="domain.row" style="width: 25%" placeholder="行数/元组数"/>
-          <el-input v-model="domain.col" style="width: 25%" placeholder="列数/属性数"/>
+          <el-input v-model="domain.row" style="width: 18%" placeholder="行数/元组数"/>
+          <el-input v-model="domain.col" style="width: 18%" placeholder="列数/属性数"/>
           <el-button @click="submit(domain)" :disabled="domain.dis">确认关系</el-button>
           <el-button @click.prevent="removeDomain(domain)">删除</el-button>
         </el-row>
