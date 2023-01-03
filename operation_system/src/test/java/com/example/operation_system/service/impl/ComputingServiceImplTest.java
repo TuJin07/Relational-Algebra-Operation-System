@@ -20,10 +20,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class ComputingServiceImplTest {
 
     @Resource
-    private static ComputingService computingService;
+    private ComputingService computingService;
 
     @Resource
-    private static RelationService relationService;
+    private RelationService relationService;
 
     private static RelationBo bo1;
 
@@ -58,6 +58,11 @@ class ComputingServiceImplTest {
         } catch (ParamLenException e) {
             log.error("参数长度错误", e);
         }
+    }
+
+    private static final String expression = "#project(A,A)";
+
+    private void insert() {
         List<RelationVo> list = new ArrayList<>();
         list.add(RelationBo.toRelationVo(bo1, "A"));
         list.add(RelationBo.toRelationVo(bo2, "B"));
@@ -68,19 +73,23 @@ class ComputingServiceImplTest {
         } catch (ParamLenException e) {
             log.error("参数长度错误", e);
         }
-
     }
-
-    private static final String expression = "A #and B";
 
     @Test
     void compute() {
+        ComputingServiceImplTest test = new ComputingServiceImplTest();
+        test.insert();
         RelationVo res = new RelationVo();
         try {
-            res = computingService.compute(expression);
+            res = test.computingService.compute(expression);
         } catch (ComputingException e) {
             log.error("计算错误", e);
         }
         System.out.println(res);
+    }
+
+    @Test
+    void test() {
+
     }
 }

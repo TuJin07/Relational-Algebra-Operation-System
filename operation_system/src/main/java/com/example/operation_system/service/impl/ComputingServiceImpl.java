@@ -70,6 +70,9 @@ public class ComputingServiceImpl implements ComputingService {
                case Constant.JOIN:
                    res = ComputingUtil.join(bo1, bo2);
                    break;
+               case Constant.DIV:
+                   res = ComputingUtil.div(bo1, bo2);
+                   break;
                case Constant.AND:
                    res = ComputingUtil.and(bo1, bo2);
                    break;
@@ -84,6 +87,9 @@ public class ComputingServiceImpl implements ComputingService {
                    break;
                default:
                    throw new ComputingException();
+           }
+           if (res == null) {
+               res = RelationBo.EMPTY_RELATION;
            }
            stack.push(res);
         }
@@ -108,8 +114,9 @@ public class ComputingServiceImpl implements ComputingService {
                 continue;
             }
             // 处理单目运算符
-            if (Constant.UNARY_OPERATOR.contains(elem)) {
+            if (elem.charAt(0) == '#' && elem.length() > 6) {
                 tempCount = preprocessingUnaryOperator(res, tempCount, elem);
+                continue;
             }
             // elem为括号或是栈空且elem为多目运算符时，直接入栈
             if (elem.equals("(") || (elem.charAt(0) == '#') && stack.isEmpty()) {
@@ -182,13 +189,13 @@ public class ComputingServiceImpl implements ComputingService {
             tmp = calculate(params[0]);
         }
         String tempRelationName = Constant.TEMP_RELATION_PREFIX + tempCount;
-        if (Constant.SELECT.equals(elem)) {     // 选择运算处理
+        if (Constant.SELECT.equals(elem.substring(0,7))) {     // 选择运算处理
             RelationBo selectResult = ComputingUtil.select(tmp, params[1]);
             relationService.insertRelation(selectResult, tempRelationName);
             res.add(tempRelationName);
             tempCount++;
         }
-        if (Constant.PROJECT.equals(elem)) {    // 投影运算处理
+        if (Constant.PROJECT.equals(elem.substring(0,8))) {    // 投影运算处理
             String[] projectColName = new String[params.length - 1];
             System.arraycopy(params, 1, projectColName, 0, params.length - 1);
             int[] projectColNo = new int[projectColName.length];

@@ -26,7 +26,21 @@ public class RelationBo {
 
     private final String[][] content;
 
+    // 空表的表示
+    public static RelationBo EMPTY_RELATION = null;
+
+    static {
+        try {
+            EMPTY_RELATION = new RelationBo(0, 0, new String[0], new String[0][0]);
+        } catch (ParamLenException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static RelationVo toRelationVo(RelationBo bo, String name) {
+        if (bo.equals(EMPTY_RELATION)) {
+            return new RelationVo();
+        }
         RelationVo res = new RelationVo();
         res.setName(name);
         res.setColLen(bo.getColLen());
