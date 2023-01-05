@@ -4,6 +4,7 @@
     <br><br><br><br>
     <el-form-item>
       <el-input v-model="expression"
+                id="expression"
                 @blur="handleInputBlur"
                 ref="inputArea"
                 style="width: 80%"
@@ -63,6 +64,10 @@ export default {
         name: '⋈'
       }, {
         name: '÷'
+      }, {
+        name: '∧'
+      }, {
+        name: '∨'
       }],
       list: [{
         id: '',
@@ -87,7 +92,7 @@ export default {
       let s2 = ''
       if (this.expression.length < this.cursorIndex) {
         if (lab === 'σ' || lab === 'π') {
-          this.expression = this.expression + lab + '()'
+          this.expression = this.expression + lab + '[][]'
         } else {
           this.expression = this.expression + lab
         }
@@ -96,7 +101,7 @@ export default {
         s2 = this.expression.toString()
         if (lab === 'σ' || lab === 'π') {
           this.expression = s1.substring(0, this.cursorIndex) +
-            lab + '()' +
+            lab + '[][]' +
             s2.substring(this.cursorIndex, this.expression.length)
         } else {
           this.expression = s1.substring(0, this.cursorIndex) +
@@ -104,7 +109,22 @@ export default {
             s2.substring(this.cursorIndex, this.expression.length)
         }
       }
-      this.$refs.inputArea.focus()
+      // 改变光标位置在第一个括号后 不能用ref
+      if (lab === 'σ' || lab === 'π') {
+        this.$nextTick(() => {
+          const txt = document.getElementById('expression')
+          txt.focus()
+          txt.selectionStart = this.cursorIndex + 2
+          txt.selectionEnd = this.cursorIndex + 2
+        })
+      } else {
+        this.$nextTick(() => {
+          const txt = document.getElementById('expression')
+          txt.focus()
+          txt.selectionStart = this.cursorIndex + 1
+          txt.selectionEnd = this.cursorIndex + 1
+        })
+      }
     },
     // 提交中的嵌套函数
     nest (ans) {
@@ -121,39 +141,52 @@ export default {
         else if (n === '÷') ans = s.substring(0, i) + ' #div ' + s.substring(i + 1, s.length)
         else if (n === 'σ' || n === 'π') {
           let x = n
+          while (n !== '[') {
+            i++
+            n = ans[i]
+          }
           let x1 = i + 1
-          let flag = 1
-          while (n !== '(') {
+          while (n !== ']') {
             i++
             n = ans[i]
           }
           let x2 = i - 1
-          let x3 = i + 1
-          i++
-          // 找到嵌套的最后一个右括号
-          for (;; i++) {
+          while (n !== '[') {
+            i++
             n = ans[i]
-            if (n === ')' && flag === 1) break
-            if (n === '(') flag++
-            if (n === ')') flag--
+          }
+          let x3 = i + 1
+          while (n !== ']') {
+            i++
+            n = ans[i]
           }
           let x4 = i - 1
           let exp = s.substring(x1, x2 + 1)
           let list = s.substring(x3, x4 + 1)
-          // 嵌套
+          // 处理条件式
+          // TODO
+          for (let k = 0; k < exp.length; k++) {
+            let m = exp[k]
+            let str = exp
+            if (m === '(') exp = str.substring(0, k + 1) + ' ' + str.substring(k + 1, str.length)
+            else if (m === ')') exp = str.substring(0, k) + ' ' + str.substring(k, str.length)
+            else if (m === '∧') exp = str.substring(0, k) + ' $and ' + str.substring(k + 1, str.length)
+            else if (m === '∨') exp = str.substring(0, k) + ' $or ' + str.substring(k + 1, str.length)
+          }
+          // 嵌套处理表
           list = this.nest(list)
           if (x === 'σ') {
-            ans = s.substring(0, x1 - 1) + '#select(' + list + ',' + exp + ',1)'
+            ans = s.substring(0, x1 - 2) + '#select[' + list + ',' + exp + ',1]'
             let len = ans.length
             ans += s.substring(i + 1, s.length)
             i = len - 1
           } else {
             let name = exp.split(',')
-            ans = s.substring(0, x1 - 1) + '#project(' + list + ','
+            ans = s.substring(0, x1 - 2) + '#project[' + list + ','
             for (let n = 0; n < name.length; n++) {
               ans += name[n] + ','
             }
-            ans += name.length + ')'
+            ans += name.length + ']'
             let len = ans.length
             ans += s.substring(i + 1, s.length)
             i = len - 1
@@ -165,9 +198,9 @@ export default {
     // 提交按钮
     submit () {
       let ans = this.expression
-      // console.log(ans)
+      console.log(ans)
       ans = this.nest(ans)
-      // console.log(ans)
+      console.log(ans)
       this.$axios
         .post('/compute/', {
           'expression': ans
