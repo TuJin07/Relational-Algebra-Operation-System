@@ -14,27 +14,29 @@ class ComputingUtilTest {
 
     private static RelationBo bo2;
 
-    // bo1 初始化
-    private static int bo1RowLen = 2;
+    // bo1 抄的Course
+    private static int bo1RowLen = 3;
 
-    private static int bo1ColLen = 4;
+    private static int bo1ColLen = 3;
 
-    private static String[] bo1ColName = {"Sno","Sname","Ssex","Sage"};
+    private static String[] bo1ColName = {"Cno","Cname","Ccredit"};
 
     private static String[][] bo1Content = {
-            {"95001", "李勇","男","20"}, {"95002", "刘晨","女","19"}
+            {"1", "shujuku","4"}, {"2", "caozuoxitong","3"},{"3", "shujujiegou","4"}
     };
 
-    // bo2 初始化
-    private static int bo2RowLen = 2;
+    // bo2 抄的SC
+    private static int bo2RowLen = 4;
 
-    private static int bo2ColLen = 2;
+    private static int bo2ColLen = 3;
 
-    private static String[] bo2ColName = {"A","B"};
+    private static String[] bo2ColName = {"Sno","Cno","Grade"};
 
     private static String[][] bo2Content = {
-            {"a1", "b1"}, {"a2","b3"}
+            {"95001", "1","92"}, {"95001", "2","65"},{"95002","2","90"},{"95002", "3","73"}
     };
+
+
 
     static {
         try {

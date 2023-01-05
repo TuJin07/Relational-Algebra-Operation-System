@@ -71,7 +71,7 @@ public class ComputingServiceImpl implements ComputingService {
                    res = ComputingUtil.join(bo1, bo2);
                    break;
                case Constant.DIV:
-                   res = ComputingUtil.div(bo1, bo2);
+                   res = ComputingUtil.div(bo2, bo1);
                    break;
                case Constant.AND:
                    res = ComputingUtil.and(bo1, bo2);
@@ -83,7 +83,7 @@ public class ComputingServiceImpl implements ComputingService {
                    res = ComputingUtil.prod(bo1, bo2);
                    break;
                case Constant.DIFF:
-                   res = ComputingUtil.diff(bo1, bo2);
+                   res = ComputingUtil.diff(bo2, bo1);
                    break;
                default:
                    throw new ComputingException();

@@ -207,6 +207,10 @@ public class ComputingUtil {
                 temp3+=",";
             }
         }
+        //处理无相同列的情况
+        if(temp1==""&&temp2==""){
+            return RelationBo.EMPTY_RELATION;
+        }
         String[] r1ColName = temp1.split(",");
         String[] r2ColName = temp2.split(",");
         String[] newColName = temp3.split(",");
@@ -275,8 +279,7 @@ public class ComputingUtil {
         }
         //处理无相同列的情况
         if(temp1==""&&temp2==""){
-            System.out.println("RelationBo.EMPTY_RELATION");
-            return null;
+            return RelationBo.EMPTY_RELATION;
         }
         String[] temp1Col = temp1.split(",");
         String[] temp2Col = temp2.split(",");
