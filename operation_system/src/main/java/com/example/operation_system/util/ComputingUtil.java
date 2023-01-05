@@ -279,7 +279,7 @@ public class ComputingUtil {
         }
         //处理无相同列的情况
         if(temp1==""&&temp2==""){
-            return RelationBo.EMPTY_RELATION;
+            return prod(r1,r2);
         }
         String[] temp1Col = temp1.split(",");
         String[] temp2Col = temp2.split(",");
