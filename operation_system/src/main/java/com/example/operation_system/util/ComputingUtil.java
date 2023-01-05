@@ -3,6 +3,7 @@ package com.example.operation_system.util;
 import com.example.operation_system.bo.RelationBo;
 import com.example.operation_system.exception.ParamLenException;
 
+import java.io.Console;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -162,7 +163,7 @@ public class ComputingUtil {
     public static RelationBo project(RelationBo r, int[] cols) {
         //5.1 遍历各行找指定列元素加入字符串str
         String str = "";
-        for(int i=0;i<r.getColLen();i++){
+        for(int i=0;i<r.getRowLen();i++){
             for(int j=0;j<cols.length;j++){
                 str+=r.getContent()[i][cols[j]];
                 str+=",";
@@ -271,6 +272,11 @@ public class ComputingUtil {
                     break;
                 }
             }
+        }
+        //处理无相同列的情况
+        if(temp1==""&&temp2==""){
+            System.out.println("RelationBo.EMPTY_RELATION");
+            return null;
         }
         String[] temp1Col = temp1.split(",");
         String[] temp2Col = temp2.split(",");
