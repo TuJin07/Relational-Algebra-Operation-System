@@ -47,7 +47,6 @@ public class ComputingServiceImpl implements ComputingService {
      * @return
      */
     private RelationBo calculate(String expression) throws ComputingException {
-        // todo 剩余四种运算完善
         List<String> post = null;
         try {
             post = parse(expression);
@@ -151,7 +150,7 @@ public class ComputingServiceImpl implements ComputingService {
     private String[] getParam(String elem) {
         int startIndex = 0, endIndex = 0;
         for (int i = 0; i < elem.length(); i++) {
-            if (elem.charAt(i) == '(') {
+            if (elem.charAt(i) == '[') {
                 startIndex = i + 1;
                 break;
             }

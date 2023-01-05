@@ -1,11 +1,12 @@
 package com.example.operation_system.util;
 
 import com.example.operation_system.bo.RelationBo;
+import com.example.operation_system.constant.Constant;
+import com.example.operation_system.exception.ComputingException;
 import com.example.operation_system.exception.ParamLenException;
+import lombok.extern.slf4j.Slf4j;
 
-import java.io.Console;
-import java.util.ArrayList;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @program: operation_system
@@ -13,6 +14,7 @@ import java.util.Objects;
  * @author: Xuan
  * @create: 2022-10-18 21:23
  **/
+@Slf4j
 public class ComputingUtil {
 
     //1 -----------交-----------
@@ -262,7 +264,6 @@ public class ComputingUtil {
 
     //7 -----------连接-----------
     public static RelationBo join(RelationBo r1, RelationBo r2) {
-        // TODO: 2022/10/18 待确定接口
         //7.1 求相同列
         String temp1 = "";        //相同列在r1中的索引
         String temp2 = "";        //相同列在r2中的索引
@@ -445,5 +446,94 @@ public class ComputingUtil {
         String[] temp3 = condition.split("=");
         if(temp3.length!=1) return "=";
         return null;
+    }
+
+    /**
+     * 辅助方法8：条件表达式中缀转后缀
+     * @param expression 中缀表达式
+     * @return 后缀表达式
+     */
+    private List<String> parsePostExpression(String expression) {
+        String[] elems = expression.split("\\|");
+        List<String> res = new ArrayList<>();
+        Deque<String> stack = new ArrayDeque<>();
+        for (String elem : elems) {
+            // elem为非运算符
+            if (elem.charAt(0) != '$' && !elem.equals("(") && !elem.equals(")")) {
+                res.add(elem);
+                continue;
+            }
+            // elem为括号或是栈空且elem为And或Or时，直接入栈
+            if (elem.equals("(") || (elem.charAt(0) == '$') && stack.isEmpty()) {
+                stack.push(elem);
+                continue;
+            }
+            // elem为右括号，出栈直到遇到左括号
+            if (elem.equals(")")) {
+                while (!stack.isEmpty() && !stack.peek().equals("(")) {
+                    res.add(stack.poll());
+                }
+                stack.poll();
+                continue;
+            }
+            // 其余情况，将优先级比elem较小的弹栈，最后入栈elem
+            while (!stack.isEmpty()
+                    && !stack.peek().equals("(")
+                    && elem.equals("$and") && (stack.peek().equals("$or") || stack.peek().equals("$and"))) {
+                res.add(stack.poll());
+            }
+            stack.push(elem);
+        }
+        // 清空栈
+        while (!stack.isEmpty()) {
+            res.add(stack.poll());
+        }
+        return res;
+    }
+
+    /**
+     * 辅助方法9：当前行是否满足复合条件表达式
+     * @param expression 包含and与or与括号的复合条件表达式
+     * @param bo 当前所计算的关系
+     * @param curRow 当前判断行
+     * @return 当前行是否符合结果
+     */
+    private boolean judgeMultipleCondition(String expression, RelationBo bo, int curRow) {
+        List<String> conditions = parsePostExpression(expression);
+        Deque<Boolean> stack = new ArrayDeque<>();
+        for (String elem : conditions) {
+            if (elem.charAt(0) != '$') {
+                stack.push(judgeSingleCondition(elem, bo, curRow));
+                continue;
+            }
+            Boolean b1 = stack.poll(), b2 = stack.poll();
+            if (b1 == null || b2 == null) {
+                try {
+                    throw new ComputingException();
+                } catch (ComputingException e) {
+                    log.error("条件表达式判断错误", e);
+                }
+            }
+            Boolean res = null;
+            if (elem.equals("$and")) {
+                res = Boolean.TRUE.equals(b1) && Boolean.TRUE.equals(b2);
+            } else {
+                res = Boolean.TRUE.equals(b1) || Boolean.TRUE.equals(b2);
+            }
+            stack.push(res);
+        }
+        return Boolean.TRUE.equals(stack.peek());
+    }
+
+    /**
+     * 辅助方法10：单个条件判断
+     * @param condition 单个条件，含大于(>)、小于(<)、等于(=)、小于等于(<=)、大于等于(>=)、不等于(!=)
+     * @param bo 当前关系
+     * @param curRow 需要判断的行
+     * @return 当前行是否符合条件
+     */
+    private boolean judgeSingleCondition(String condition, RelationBo bo, int curRow) {
+        // todo @manqi
+        return false;
     }
 }
