@@ -25,11 +25,12 @@
 <!--    </el-dialog>-->
     <h3 style="float: left">结果表</h3>
     <br><br><br><br>
-    <el-table :data="list">
+    <!-- 解决表头不刷新问题 -->
+    <el-table :data="list" :default-sort="sortObj" @sort-change="handleChange" :key="mykey">
       <el-table-column label="id" prop="id"></el-table-column>
       <!-- slot="header"是为了插入表头的，这里遍历list[0],是因为表头都一样，所以取第一行数据的字段做为表头即可 -->
       <el-table-column v-for="(item, index) in list[0].dataList" :key="index">
-        <template slot="header">
+        <template #header>
           {{item.num}}
         </template>
         <!-- index对应下面动态列（dataList）的索引，取出值渲染 -->
@@ -69,7 +70,9 @@ export default {
           num: '',
           data: ''
         }]
-      }]
+      }],
+      sortObj: {},
+      mykey: ''
     }
   },
 
@@ -174,24 +177,46 @@ export default {
             // 返回表格
             let row = successResponse.data.data.row_len
             let col = successResponse.data.data.col_len
-            let name = successResponse.data.data.col_name.split(',')
-            let content = successResponse.data.data.content.split(',')
-            this.list.splice(0, this.list.length - 1)
-            for (let i = 1; i <= row; i++) {
-              let l = []
-              for (let j = 0; j < col; j++) {
-                l.push({
-                  num: name[j],
-                  data: content[j]
+            let name
+            let content
+            this.list = [{
+              id: '',
+              dataList: [{
+                num: '',
+                data: ''
+              }]
+            }]
+            // 返回空表
+            if (row === 0 && col === 0) {
+              this.$alert('返回空表！', '计算表达式', {
+                confirmButtonText: '确定',
+                callback: action => {
+                  this.$message({
+                    type: 'info',
+                    message: `action: ${action}`
+                  })
+                }
+              })
+            } else {
+              name = successResponse.data.data.col_name.split(',')
+              content = successResponse.data.data.content.split(',')
+              for (let i = 1; i <= row; i++) {
+                let l = []
+                for (let j = 0; j < col; j++) {
+                  l.push({
+                    num: name[j],
+                    data: content[j]
+                  })
+                }
+                content.splice(0, col)
+                this.list.push({
+                  id: i,
+                  dataList: l
                 })
               }
-              content.splice(0, col)
-              this.list.push({
-                id: i,
-                dataList: l
-              })
+              this.list.splice(0, 1)
+              this.reDrawTable()
             }
-            this.list.splice(0, 1)
           } else if (successResponse.data.code === 400) {
             this.$alert('提交错误！', '计算表达式', {
               confirmButtonText: '确定',
@@ -204,6 +229,20 @@ export default {
             })
           }
         })
+    },
+    handleChange ({ column, prop, order }) {
+      this.sortObj = {
+        prop,
+        order
+      }
+    },
+    reDrawTable () {
+      this.mykey = Math.random()
+      // 重新挂载拖拽监听
+      this.$nextTick(() => {
+        this.columnDrop()
+        this.rowDrop()
+      })
     }
   }
 }
