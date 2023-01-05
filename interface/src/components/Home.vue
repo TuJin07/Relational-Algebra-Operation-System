@@ -6,6 +6,7 @@
     <el-container direction="horizontal">
       <el-aside style="width: 50%;margin-top: 20px">
         <InputTable></InputTable>
+        <TableData></TableData>
       </el-aside>
 
       <el-main style="width: 50%">
@@ -19,9 +20,10 @@
 <script>
 import InputExpression from './home/InputExpression'
 import InputTable from './home/InputTable'
+import TableData from './home/TableData'
 export default {
   name: 'Home',
-  components: {InputTable, InputExpression}
+  components: {TableData, InputTable, InputExpression}
 }
 </script>
 

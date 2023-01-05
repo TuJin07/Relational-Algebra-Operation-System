@@ -29,24 +29,4 @@ public class RelationVo {
 
     @JsonProperty("content")
     private String content;
-
-    public static RelationVo toRelationVo(RelationBo bo, String name) {
-        RelationVo res = new RelationVo();
-        res.setName(name);
-        res.setColLen(bo.getColLen());
-        res.setRowLen(bo.getRowLen());
-        String content = null;
-        for (int i = 0; i < bo.getRowLen(); i++) {
-            for (int j = 0; j < bo.getColLen(); j++) {
-                // todo
-            }
-        }
-        String colName = null;
-        for (int i = 0; i < bo.getColName().length; i++) {
-            // todo
-        }
-        res.setContent(content);
-        res.setColName(colName);
-        return res;
-    }
 }

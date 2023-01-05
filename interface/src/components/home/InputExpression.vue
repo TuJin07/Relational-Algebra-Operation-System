@@ -1,5 +1,7 @@
 <template>
   <el-form>
+    <h3 style="float: left">输入表达式</h3>
+    <br><br><br><br>
     <el-form-item>
       <el-input v-model="expression"
                 @blur="handleInputBlur"
@@ -21,6 +23,8 @@
 <!--      <el-table>-->
 <!--      </el-table>-->
 <!--    </el-dialog>-->
+    <h3 style="float: left">结果表</h3>
+    <br><br><br><br>
     <el-table :data="list">
       <el-table-column label="id" prop="id"></el-table-column>
       <!-- slot="header"是为了插入表头的，这里遍历list[0],是因为表头都一样，所以取第一行数据的字段做为表头即可 -->
@@ -158,48 +162,48 @@ export default {
     // 提交按钮
     submit () {
       let ans = this.expression
-      console.log(ans)
+      // console.log(ans)
       ans = this.nest(ans)
-      console.log(ans)
-      // this.$axios
-      //   .post('/compute/', {
-      //     'expression': ans
-      //   })
-      //   .then(successResponse => {
-      //     if (successResponse.data.code === 200) {
-      //       // 返回表格
-      //       let row = successResponse.data.data.row_len
-      //       let col = successResponse.data.data.col_len
-      //       let name = successResponse.data.data.col_name.split(',')
-      //       let content = successResponse.data.data.content.split(',')
-      //       this.list.splice(0, this.list.length - 1)
-      //       for (let i = 1; i <= row; i++) {
-      //         let l = []
-      //         for (let j = 0; j < col; j++) {
-      //           l.push({
-      //             num: name[j],
-      //             data: content[j]
-      //           })
-      //         }
-      //         content.splice(0, col)
-      //         this.list.push({
-      //           id: i,
-      //           dataList: l
-      //         })
-      //       }
-      //       this.list.splice(0, 1)
-      //     } else if (successResponse.data.code === 400) {
-      //       this.$alert('提交错误！', '计算表达式', {
-      //         confirmButtonText: '确定',
-      //         callback: action => {
-      //           this.$message({
-      //             type: 'info',
-      //             message: `action: ${action}`
-      //           })
-      //         }
-      //       })
-      //     }
-      //   })
+      // console.log(ans)
+      this.$axios
+        .post('/compute/', {
+          'expression': ans
+        })
+        .then(successResponse => {
+          if (successResponse.data.code === 200) {
+            // 返回表格
+            let row = successResponse.data.data.row_len
+            let col = successResponse.data.data.col_len
+            let name = successResponse.data.data.col_name.split(',')
+            let content = successResponse.data.data.content.split(',')
+            this.list.splice(0, this.list.length - 1)
+            for (let i = 1; i <= row; i++) {
+              let l = []
+              for (let j = 0; j < col; j++) {
+                l.push({
+                  num: name[j],
+                  data: content[j]
+                })
+              }
+              content.splice(0, col)
+              this.list.push({
+                id: i,
+                dataList: l
+              })
+            }
+            this.list.splice(0, 1)
+          } else if (successResponse.data.code === 400) {
+            this.$alert('提交错误！', '计算表达式', {
+              confirmButtonText: '确定',
+              callback: action => {
+                this.$message({
+                  type: 'info',
+                  message: `action: ${action}`
+                })
+              }
+            })
+          }
+        })
     }
   }
 }
