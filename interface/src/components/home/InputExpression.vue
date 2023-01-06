@@ -168,10 +168,10 @@ export default {
           for (let k = 0; k < exp.length; k++) {
             let m = exp[k]
             let str = exp
-            if (m === '(') exp = str.substring(0, k + 1) + ' ' + str.substring(k + 1, str.length)
-            else if (m === ')') exp = str.substring(0, k) + ' ' + str.substring(k, str.length)
-            else if (m === '∧') exp = str.substring(0, k) + ' $and ' + str.substring(k + 1, str.length)
-            else if (m === '∨') exp = str.substring(0, k) + ' $or ' + str.substring(k + 1, str.length)
+            if (m === '(') exp = str.substring(0, k + 1) + '|' + str.substring(k + 1, str.length)
+            else if (m === ')') exp = str.substring(0, k) + '|' + str.substring(k, str.length)
+            else if (m === '∧') exp = str.substring(0, k) + '|$and|' + str.substring(k + 1, str.length)
+            else if (m === '∨') exp = str.substring(0, k) + '|$or|' + str.substring(k + 1, str.length)
           }
           // 嵌套处理表
           list = this.nest(list)
