@@ -1,5 +1,6 @@
 package com.example.operation_system.bo;
 
+import com.example.operation_system.constant.Constant;
 import com.example.operation_system.exception.ParamLenException;
 import com.example.operation_system.vo.RelationVo;
 import lombok.Getter;
@@ -38,10 +39,27 @@ public class RelationBo {
     }
 
     public static RelationVo toRelationVo(RelationBo bo, String name) {
+        // 空表处理1
         if (bo.equals(EMPTY_RELATION)) {
             return new RelationVo();
         }
         RelationVo res = new RelationVo();
+        // 空表处理2
+        if (bo.rowLen == 0) {
+            res.setName(name);
+            res.setRowLen(0);
+            res.setColLen(bo.colLen);
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < bo.getColName().length; i++) {
+                sb.append(bo.getColName()[i]);
+                sb.append(',');
+            }
+            sb.deleteCharAt(sb.length() - 1);
+            String colName = sb.toString();
+            res.setColName(colName);
+            res.setContent("");
+            return res;
+        }
         res.setName(name);
         res.setColLen(bo.getColLen());
         res.setRowLen(bo.getRowLen());
@@ -81,6 +99,12 @@ public class RelationBo {
     public RelationBo(int rowLen, int colLen, String[] colName, String relation) throws ParamLenException {
         this.rowLen = rowLen;
         this.colLen = colLen;
+        // 空表处理
+        if (rowLen == 0) {
+            this.content = new String[0][colLen];
+            this.colName = colName;
+            return;
+        }
         content = new String[rowLen][colLen];
         setContent(relation);
         this.colName = colName;
@@ -89,6 +113,12 @@ public class RelationBo {
     public RelationBo(int rowLen, int colLen, String[] colName, String[][] content) throws ParamLenException {
         this.rowLen = rowLen;
         this.colLen = colLen;
+        // 空表处理
+        if (rowLen == 0) {
+            this.content = new String[0][colLen];
+            this.colName = colName;
+            return;
+        }
         if (content.length != rowLen || (content.length != 0 && content[0].length != colLen)) {
             throw new ParamLenException();
         }

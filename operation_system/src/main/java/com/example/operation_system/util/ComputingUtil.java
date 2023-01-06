@@ -20,8 +20,16 @@ public class ComputingUtil {
     //1 -----------交-----------
     //选出两个关系内相同的元组
     public static RelationBo and(RelationBo r1, RelationBo r2) {
-        // todo @manqi
-        //取r1一行与r2的每一行对比，如果重复则加入字符串str，用逗号分开
+        // 两个表结构相同才有and的必要（列名集相同，但可不同序）：如果不同直接返回空行空列的空表
+        if (!checkColName(r1, r2)) {
+            try {
+                return new RelationBo(0, 0, new String[0], "");
+            } catch (ParamLenException e) {
+                e.printStackTrace();
+            }
+        }
+        // todo --------------------------- @manqi 修改：满足列名顺序不同也可以比较，想不出来怎么做可以和我讨论下，可能用到哈希表HashMap
+        // 取r1一行与r2的每一行对比，如果重复则加入字符串str，用逗号分开
         int rowLen = 0;
         String str = "";
         for(int i=0;i<r1.getRowLen();i++){
@@ -32,23 +40,32 @@ public class ComputingUtil {
                 }
             }
         }
+        // todo --------------------------- 修改两条直线之间的code
+        RelationBo r3 = null;
         try {
-            RelationBo r3 = new RelationBo(rowLen,r1.getColLen(),r1.getColName(),str);
-            return r3;
+            r3 = new RelationBo(rowLen, r1.getColLen(), r1.getColName(), str);
         }catch (ParamLenException e){
             System.out.print("参数长度错误");
         }
-        return null;
+        return r3;
     }
     //2 -----------并-----------
     //合并两个集合，去掉重复的
     public static RelationBo or(RelationBo r1, RelationBo r2) {
-        // todo @manqi
+        // 两个表结构相同才有or的必要（列名集相同，但可不同序）：如果不同直接返回空行空列的空表
+        if (!checkColName(r1, r2)) {
+            try {
+                return new RelationBo(0, 0, new String[0], "");
+            } catch (ParamLenException e) {
+                e.printStackTrace();
+            }
+        }
+        // todo --------------------------- @manqi 同上and，修改：满足列名顺序不同也可以比较，想不出来怎么做可以和我讨论下，可能用到哈希表HashMap
         // 思路：取r1一行与r2的每一行对比，如果无重复则加入字符串str，用逗号分开
         int rowLen = 0;
         String str = "";
         for(int i=0;i<r1.getRowLen();i++){
-            Boolean isRepead = false;
+            boolean isRepead = false;
             for(int j=0;j<r2.getRowLen();j++){
                 if(isSame(r1,r2,i,j)){
                     isRepead = true;
@@ -63,19 +80,28 @@ public class ComputingUtil {
             str = addStr(r2,i,str);
             rowLen++;
         }
+        // todo ---------------------------
+        RelationBo r3 = null;
         try {
-            RelationBo r3 = new RelationBo(rowLen,r1.getColLen(),r1.getColName(),str);
-            return r3;
+            r3 = new RelationBo(rowLen, r1.getColLen(), r1.getColName(), str);
         }catch (ParamLenException e){
             System.out.print("参数长度错误");
         }
-        return null;
+        return r3;
     }
 
     //3 -----------差-----------
     //保留前者中与后者不重复的项
     public static RelationBo diff(RelationBo r1, RelationBo r2) {
-        // todo @manqi
+        // 两个表结构相同才有diff的必要（列名集相同，但可不同序）：如果不同直接返回空行空列的空表
+        if (!checkColName(r1, r2)) {
+            try {
+                return new RelationBo(0, 0, new String[0], "");
+            } catch (ParamLenException e) {
+                e.printStackTrace();
+            }
+        }
+        // todo --------------------------- @manqi 同上，修改：满足列名顺序不同也可以比较，想不出来怎么做可以和我讨论下，可能用到哈希表HashMap
         //取r1一行与r2的每一行对比，如果不重复则加入字符串str，用逗号分开
         int rowLen = 0;
         String str = "";
@@ -91,20 +117,20 @@ public class ComputingUtil {
                 rowLen++;
             }
         }
+        // todo ---------------------------
+        RelationBo r3 = null;
         try {
-            RelationBo r3 = new RelationBo(rowLen,r1.getColLen(),r1.getColName(),str);
-            return r3;
+            r3 = new RelationBo(rowLen, r1.getColLen(), r1.getColName(), str);
         }catch (ParamLenException e){
             System.out.print("参数长度错误");
         }
-        return null;
+        return r3;
     }
 
 
     //4 -----------笛卡尔积-----------
     //三元组*三元组=九元组
     public static RelationBo prod(RelationBo r1, RelationBo r2) {
-        // todo @manqi
         // 处理必要数据
         int rowLen = r1.getRowLen()*r2.getRowLen();
         int colLen = r1.getColLen()+r2.getColLen();
@@ -129,35 +155,13 @@ public class ComputingUtil {
             }
         }
 
+        RelationBo r3 = null;
         try {
-            RelationBo r3 = new RelationBo(rowLen,colLen,colName,str);
-            return r3;
+            r3 = new RelationBo(rowLen, r1.getColLen(), r1.getColName(), str);
         }catch (ParamLenException e){
             System.out.print("参数长度错误");
         }
-        return null;
-    }
-
-    //辅助方法1：对比表r1的第a行和表r2的第b行是否相同
-    //-已测试
-    private static boolean isSame(RelationBo r1,RelationBo r2,int a,int b){
-        int colNum = r1.getColLen();
-        for(int i=0;i<colNum;i++){
-            if(!Objects.equals(r1.getContent()[a][i], r2.getContent()[b][i])){
-                return false;
-            }
-        }
-        return true;
-    }
-
-    //辅助方法2：把表r第x行加入字符串str
-    //-已测试
-    private static String addStr(RelationBo r,int x,String str){
-        for(int i=0;i<r.getColLen();i++){
-            str+=r.getContent()[x][i];
-            str+=",";
-        }
-        return str;
+        return r3;
     }
 
     //5 -----------投影-----------
@@ -177,13 +181,13 @@ public class ComputingUtil {
             colName[i] = r.getColName()[cols[i]];
         }
         //5.3 赋给新表
+        RelationBo r3 = null;
         try {
-            RelationBo r3 = new RelationBo(r.getRowLen(),cols.length,colName,str);
-            return r3;
+            r3 = new RelationBo(r.getRowLen(), cols.length, colName, str);
         }catch (ParamLenException e){
             System.out.print("参数长度错误");
         }
-        return null;
+        return r3;
     }
 
     //6 -----------除法-----------
@@ -235,31 +239,13 @@ public class ComputingUtil {
             }
         }
         //6.4 赋给新表
+        RelationBo r3 = null;
         try {
-            RelationBo r3 = new RelationBo(rowLen,r1.getColLen()-r1Temp.length,newColName,str);
-            return r3;
+            r3 = new RelationBo(rowLen, r1.getColLen()-r1Temp.length, newColName, str);
         }catch (ParamLenException e){
-            System.out.println("参数长度错误");
+            System.out.print("参数长度错误");
         }
-        return null;
-    }
-
-    //辅助方法3：检查表r2New中是否含有表r1的第x行的特定列
-    //已测试
-    public static Boolean isHasSpecial(RelationBo r1,RelationBo r2New,int x,int[] r1Temp){
-        //依次检查r2New的每一行是否含有r1指定行的特定列
-        Boolean isHas = false;
-        for(int i=0;i<r2New.getRowLen();i++){
-            isHas = true;
-            for(int j=0;j<r1Temp.length;j++){
-                if(!Objects.equals(r2New.getContent()[i][j],r1.getContent()[x][r1Temp[j]])){
-                    isHas = false;
-                    break;
-                }
-            }
-            if(isHas) return true;
-        }
-        return false;
+        return r3;
     }
 
     //7 -----------连接-----------
@@ -336,13 +322,74 @@ public class ComputingUtil {
             }
         }
         //7.3 赋给新表
+        RelationBo r3 = null;
         try {
-            RelationBo r3 = new RelationBo(rowLen,colLen,colName,str);
-            return r3;
+            r3 = new RelationBo(rowLen,colLen,colName,str);
         }catch (ParamLenException e){
-            System.out.println("参数长度错误");
+            System.out.print("参数长度错误");
         }
-        return null;
+        return r3;
+    }
+
+    //8 -----------选择-----------
+    public static RelationBo select(RelationBo r, String conditions) {
+        List<String> post = parsePostExpression(conditions);
+        //8.2 计算
+        String str = "";
+        int rowLen = 0;
+        for(int i=0;i<r.getRowLen();i++){
+            if(judgeMultipleCondition(post,r,i)) {
+                str = addStr(r, i, str);
+                rowLen++;
+            }
+        }
+        RelationBo r3 = null;
+        try {
+            r3 = new RelationBo(rowLen,r.getColLen(),r.getColName(),str);
+        }catch (ParamLenException e){
+            System.out.print("参数长度错误");
+        }
+        return r3;
+    }
+
+    //辅助方法1：对比表r1的第a行和表r2的第b行是否相同
+    //-已测试
+    private static boolean isSame(RelationBo r1,RelationBo r2,int a,int b){
+        int colNum = r1.getColLen();
+        for(int i=0;i<colNum;i++){
+            if(!Objects.equals(r1.getContent()[a][i], r2.getContent()[b][i])){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    //辅助方法2：把表r第x行加入字符串str
+    //-已测试
+    private static String addStr(RelationBo r,int x,String str){
+        for(int i=0;i<r.getColLen();i++){
+            str+=r.getContent()[x][i];
+            str+=",";
+        }
+        return str;
+    }
+
+    //辅助方法3：检查表r2New中是否含有表r1的第x行的特定列
+    //已测试
+    public static Boolean isHasSpecial(RelationBo r1,RelationBo r2New,int x,int[] r1Temp){
+        //依次检查r2New的每一行是否含有r1指定行的特定列
+        Boolean isHas = false;
+        for(int i=0;i<r2New.getRowLen();i++){
+            isHas = true;
+            for(int j=0;j<r1Temp.length;j++){
+                if(!Objects.equals(r2New.getContent()[i][j],r1.getContent()[x][r1Temp[j]])){
+                    isHas = false;
+                    break;
+                }
+            }
+            if(isHas) return true;
+        }
+        return false;
     }
 
     //辅助方法4：判断表r1第x行的特定列int[]r1Col和表r2第y行的特定列int[]r2Col是否相等
@@ -384,46 +431,12 @@ public class ComputingUtil {
         return str;
     }
 
-    //8 -----------选择-----------
-    public static RelationBo select(RelationBo r, String condition) {
-        // TODO: 2022/10/18 待确定接口
-        //8.1 判断输入的条件属于哪一类 single:是否属于含</>/...的单一表达式
-        Boolean single = false;
-        String[] temp = condition.split(">|<|=|<=|>=|!=");
-        if(temp.length!=1) single = true;
-        //System.out.println(single);
-        //8.2 计算
-        String str = "";
-        int rowLen = 0;
-        ComputingUtil cu = new ComputingUtil();
-        for(int i=0;i<r.getRowLen();i++){
-            if(single&&cu.judgeSingleCondition(condition,r,i)){
-                str = addStr(r,i,str);
-                rowLen++;
-            }
-            else if(!single&&cu.judgeMultipleCondition(condition,r,i)){
-                str = addStr(r,i,str);
-                rowLen++;
-            }
-        }
-        //8.3 赋给新表
-        try {
-            //System.out.println(rowLen);
-            //System.out.println(str);
-            RelationBo r3 = new RelationBo(rowLen,r.getColLen(),r.getColName(),str);
-            return r3;
-        }catch (ParamLenException e){
-            System.out.println("参数长度错误");
-        }
-        return null;
-    }
-
     /**
      * 辅助方法7：条件表达式中缀转后缀
      * @param expression 中缀表达式
      * @return 后缀表达式
      */
-    private List<String> parsePostExpression(String expression) {
+    private static List<String> parsePostExpression(String expression) {
         String[] elems = expression.split("\\|");
         List<String> res = new ArrayList<>();
         Deque<String> stack = new ArrayDeque<>();
@@ -446,10 +459,10 @@ public class ComputingUtil {
                 stack.poll();
                 continue;
             }
-            // 其余情况，将优先级比elem较小的弹栈，最后入栈elem
+            // 其余情况，将优先级比elem较大的弹栈，最后入栈elem
             while (!stack.isEmpty()
                     && !stack.peek().equals("(")
-                    && elem.equals("$and") && (stack.peek().equals("$or") || stack.peek().equals("$and"))) {
+                    && elem.equals("$or") && (stack.peek().equals("$and") || stack.peek().equals("$or"))) {
                 res.add(stack.poll());
             }
             stack.push(elem);
@@ -463,13 +476,12 @@ public class ComputingUtil {
 
     /**
      * 辅助方法8：当前行是否满足复合条件表达式
-     * @param expression 包含and与or与括号的复合条件表达式
+     * @param conditions 包含and与or与括号的复合条件表达式
      * @param bo 当前所计算的关系
      * @param curRow 当前判断行
      * @return 当前行是否符合结果
      */
-    private boolean judgeMultipleCondition(String expression, RelationBo bo, int curRow) {
-        List<String> conditions = parsePostExpression(expression);
+    private static boolean judgeMultipleCondition(List<String> conditions, RelationBo bo, int curRow) {
         Deque<Boolean> stack = new ArrayDeque<>();
         for (String elem : conditions) {
             if (elem.charAt(0) != '$') {
@@ -502,7 +514,7 @@ public class ComputingUtil {
      * @param curRow 需要判断的行
      * @return 当前行是否符合条件
      */
-    private boolean judgeSingleCondition(String condition, RelationBo bo, int curRow) {
+    private static boolean judgeSingleCondition(String condition, RelationBo bo, int curRow) {
         //9.1 处理condition: 列名 符号 内容
         String sysmbol = isWhat(condition);
         //9.2 判断
@@ -579,5 +591,28 @@ public class ComputingUtil {
         String[] temp5 = condition.split("<");
         if(temp5.length!=1) return "<";
         return "=";
+    }
+
+    // 辅助方法11：检查两个表的列是否相同
+    private static boolean checkColName(RelationBo bo1, RelationBo bo2) {
+        if (bo1.getColName().length != bo2.getColName().length) {
+            return false;
+        }
+        Map<String, Integer> fq = new HashMap<>();
+        for (String name : bo1.getColName()) {
+            fq.put(name, 1);
+        }
+        for (String name : bo2.getColName()) {
+            if (!fq.containsKey(name)) {
+                return false;
+            }
+            fq.put(name, 0);
+        }
+        for (Integer i : fq.values()) {
+            if (i != 0) {
+                return false;
+            }
+        }
+        return true;
     }
 }
