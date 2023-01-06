@@ -387,48 +387,29 @@ public class ComputingUtil {
     //8 -----------选择-----------
     public static RelationBo select(RelationBo r, String condition) {
         // TODO: 2022/10/18 待确定接口
-        //8.1 处理condition，>|<一般是数字(double)，=一般是字符串(String)
-        String[] temp = condition.split(">|<|=");
-        String sysmbol = isWhat(condition);
-        String colName = temp[0];
-        String content = temp[1];
-        //8.2 判断并加入新字符串
+        //8.1 判断输入的条件属于哪一类 single:是否属于含</>/...的单一表达式
+        Boolean single = false;
+        String[] temp = condition.split(">|<|=|<=|>=|!=");
+        if(temp.length!=1) single = true;
+        //System.out.println(single);
+        //8.2 计算
         String str = "";
         int rowLen = 0;
-
-        if(Objects.equals(sysmbol,">")){
-            int num = r.getColIndexByName(colName);
-            double contentDou = Double.parseDouble(content);
-            for(int i=0;i<r.getRowLen();i++){
-                if(Double.parseDouble(r.getContent()[i][num])>contentDou){
-                    str = addStr(r,i,str);
-                    rowLen++;
-                }
+        ComputingUtil cu = new ComputingUtil();
+        for(int i=0;i<r.getRowLen();i++){
+            if(single&&cu.judgeSingleCondition(condition,r,i)){
+                str = addStr(r,i,str);
+                rowLen++;
             }
-        }
-
-        else if(Objects.equals(sysmbol,"<")){
-            int num = r.getColIndexByName(colName);
-            double contentDou = Double.parseDouble(content);
-            for(int i=0;i<r.getRowLen();i++){
-                if(Double.parseDouble(r.getContent()[i][num])>contentDou){
-                    str = addStr(r,i,str);
-                    rowLen++;
-                }
-            }
-        }
-
-        else if(Objects.equals(sysmbol,"=")){
-            int num = r.getColIndexByName(colName);
-            for(int i=0;i<r.getRowLen();i++){
-                if(Objects.equals(r.getContent()[i][num],content)){
-                    str = addStr(r,i,str);
-                    rowLen++;
-                }
+            else if(!single&&cu.judgeMultipleCondition(condition,r,i)){
+                str = addStr(r,i,str);
+                rowLen++;
             }
         }
         //8.3 赋给新表
         try {
+            //System.out.println(rowLen);
+            //System.out.println(str);
             RelationBo r3 = new RelationBo(rowLen,r.getColLen(),r.getColName(),str);
             return r3;
         }catch (ParamLenException e){
@@ -437,19 +418,8 @@ public class ComputingUtil {
         return null;
     }
 
-    //辅助方法7：判断中间符号是什么(>|<|=)
-    private static String isWhat(String condition){
-        String[] temp1 = condition.split(">");
-        if(temp1.length!=1) return ">";
-        String[] temp2 = condition.split("<");
-        if(temp2.length!=1) return "<";
-        String[] temp3 = condition.split("=");
-        if(temp3.length!=1) return "=";
-        return null;
-    }
-
     /**
-     * 辅助方法8：条件表达式中缀转后缀
+     * 辅助方法7：条件表达式中缀转后缀
      * @param expression 中缀表达式
      * @return 后缀表达式
      */
@@ -492,7 +462,7 @@ public class ComputingUtil {
     }
 
     /**
-     * 辅助方法9：当前行是否满足复合条件表达式
+     * 辅助方法8：当前行是否满足复合条件表达式
      * @param expression 包含and与or与括号的复合条件表达式
      * @param bo 当前所计算的关系
      * @param curRow 当前判断行
@@ -526,14 +496,88 @@ public class ComputingUtil {
     }
 
     /**
-     * 辅助方法10：单个条件判断
+     * 辅助方法9：单个条件判断
      * @param condition 单个条件，含大于(>)、小于(<)、等于(=)、小于等于(<=)、大于等于(>=)、不等于(!=)
      * @param bo 当前关系
      * @param curRow 需要判断的行
      * @return 当前行是否符合条件
      */
     private boolean judgeSingleCondition(String condition, RelationBo bo, int curRow) {
-        // todo @manqi
+        //9.1 处理condition: 列名 符号 内容
+        String sysmbol = isWhat(condition);
+        //9.2 判断
+        if(Objects.equals(sysmbol,">")){
+            String[] temp = condition.split(">");
+            int colNum = bo.getColIndexByName(temp[0]);
+            double num = Double.parseDouble(temp[1]);
+            if(Double.parseDouble(bo.getContent()[curRow][colNum])>num){
+                return true;
+            }
+            return false;
+        }
+        else if(Objects.equals(sysmbol,"<")){
+            String[] temp = condition.split("<");
+            int colNum = bo.getColIndexByName(temp[0]);
+            double num = Double.parseDouble(temp[1]);
+            if(Double.parseDouble(bo.getContent()[curRow][colNum])<num){
+                return true;
+            }
+            return false;
+        }
+        else if(Objects.equals(sysmbol,"<=")){
+            String[] temp = condition.split("<=");
+            int colNum = bo.getColIndexByName(temp[0]);
+            double num = Double.parseDouble(temp[1]);
+            if(Double.parseDouble(bo.getContent()[curRow][colNum])<=num){
+                return true;
+            }
+            return false;
+        }
+        else if(Objects.equals(sysmbol,">=")){
+            String[] temp = condition.split(">=");
+            int colNum = bo.getColIndexByName(temp[0]);
+            double num = Double.parseDouble(temp[1]);
+            if(Double.parseDouble(bo.getContent()[curRow][colNum])>=num){
+                return true;
+            }
+            return false;
+        }
+        else if(Objects.equals(sysmbol,"=")){
+            String[] temp = condition.split("=");
+            int colNum = bo.getColIndexByName(temp[0]);
+            if(Objects.equals(bo.getContent()[curRow][colNum],temp[1])){
+                return true;
+            }
+            return false;
+        }
+        else if(Objects.equals(sysmbol,"!=")){
+            String[] temp = condition.split("!=");
+            int colNum = bo.getColIndexByName(temp[0]);
+            if(!Objects.equals(bo.getContent()[curRow][colNum],temp[1])){
+                return true;
+            }
+            return false;
+        }
         return false;
+    }
+
+    /**
+     * 辅助方法10：判断单个条件符号是什么
+     * 单个条件，含大于(>)、小于(<)、等于(=)、小于等于(<=)、大于等于(>=)、不等于(!=)
+     * @param condition 条件
+     * @return 符号
+     */
+    private static String isWhat(String condition){
+        String[] temp1 = condition.split(">=");
+        if(temp1.length!=1) return ">=";
+        String[] temp2 = condition.split("<=");
+        if(temp2.length!=1) return "<=";
+        String[] temp3 = condition.split("!");
+        if(temp3.length!=1) return "!=";
+        String[] temp4 = condition.split(">");
+        if(temp4.length!=1) return ">";
+        String[] temp5 = condition.split("<");
+        if(temp5.length!=1) return "<";
+        return "=";
     }
 }

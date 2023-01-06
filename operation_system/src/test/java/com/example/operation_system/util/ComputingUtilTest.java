@@ -80,7 +80,7 @@ class ComputingUtilTest {
 
     @Test
     void select() {
-        RelationBo res = ComputingUtil.select(bo1,"A>0");
+        RelationBo res = ComputingUtil.select(bo1,"Cno!=2");
         System.out.println(res);
     }
 
