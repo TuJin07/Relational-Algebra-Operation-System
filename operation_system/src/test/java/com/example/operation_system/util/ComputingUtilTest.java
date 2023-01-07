@@ -14,6 +14,10 @@ class ComputingUtilTest {
 
     private static RelationBo bo2;
 
+    private static RelationBo bo3;
+
+    private static RelationBo bo4;
+
     // bo1 抄的Course
     private static int bo1RowLen = 3;
 
@@ -36,12 +40,34 @@ class ComputingUtilTest {
             {"95001", "1","92"}, {"95001", "2","65"},{"95002","2","90"},{"95002", "3","73"}
     };
 
+    //bo3
+    private static int bo3RowLen = 2;
 
+    private static int bo3ColLen = 2;
+
+    private static String[] bo3ColName = {"A","B"};
+
+    private static String[][] bo3Content = {
+            {"95001", "1"}, {"95002", "2"}
+    };
+
+    //bo4
+    private static int bo4RowLen = 2;
+
+    private static int bo4ColLen = 2;
+
+    private static String[] bo4ColName = {"B","A"};
+
+    private static String[][] bo4Content = {
+            {"1","95001"}, {"3","95003"}
+    };
 
     static {
         try {
             bo1 = new RelationBo(bo1RowLen, bo1ColLen, bo1ColName, bo1Content);
             bo2 = new RelationBo(bo2RowLen, bo2ColLen, bo2ColName, bo2Content);
+            bo3 = new RelationBo(bo3RowLen, bo3ColLen, bo3ColName, bo3Content);
+            bo4 = new RelationBo(bo4RowLen, bo4ColLen, bo4ColName, bo4Content);
         } catch (ParamLenException e) {
             log.error("参数长度错误", e);
         }
@@ -50,19 +76,19 @@ class ComputingUtilTest {
 
     @Test
     void and() {
-        RelationBo res = ComputingUtil.and(bo1, bo2);
+        RelationBo res = ComputingUtil.and(bo3, bo4);
         System.out.println(res);
     }
 
     @Test
     void or() {
-        RelationBo res = ComputingUtil.or(bo1, bo2);
+        RelationBo res = ComputingUtil.or(bo3, bo4);
         System.out.println(res);
     }
 
     @Test
     void diff() {
-        RelationBo res = ComputingUtil.diff(bo1, bo2);
+        RelationBo res = ComputingUtil.diff(bo3, bo4);
         System.out.println(res);
     }
 

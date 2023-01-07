@@ -29,12 +29,21 @@ public class ComputingUtil {
             }
         }
         // todo --------------------------- @manqi 修改：满足列名顺序不同也可以比较，想不出来怎么做可以和我讨论下，可能用到哈希表HashMap
-        // 取r1一行与r2的每一行对比，如果重复则加入字符串str，用逗号分开
+        //1.将r1列与r2列对应，temp[a]=b：r1的第a列对应r2的第b列
+        int[] temp = new int[r1.getColLen()];
+        for(int i=0;i<r1.getColLen();i++){
+            for(int j=0;j<r2.getColLen();j++){
+                if(Objects.equals(r1.getColName()[i],r2.getColName()[j])){
+                    temp[i] = j;
+                }
+            }
+        }
+        //2.取r1一行与r2的每一行对比，如果重复则加入字符串str，用逗号分开
         int rowLen = 0;
         String str = "";
         for(int i=0;i<r1.getRowLen();i++){
             for(int j=0;j<r2.getRowLen();j++){
-                if(isSame(r1,r2,i,j)){
+                if(isSameTwo(r1,r2,i,j,temp)){
                     str = addStr(r1,i,str);
                     rowLen++;
                 }
@@ -61,13 +70,22 @@ public class ComputingUtil {
             }
         }
         // todo --------------------------- @manqi 同上and，修改：满足列名顺序不同也可以比较，想不出来怎么做可以和我讨论下，可能用到哈希表HashMap
-        // 思路：取r1一行与r2的每一行对比，如果无重复则加入字符串str，用逗号分开
+        //1.将r1列与r2列对应，temp[a]=b：r1的第a列对应r2的第b列
+        int[] temp = new int[r1.getColLen()];
+        for(int i=0;i<r1.getColLen();i++){
+            for(int j=0;j<r2.getColLen();j++){
+                if(Objects.equals(r1.getColName()[i],r2.getColName()[j])){
+                    temp[i] = j;
+                }
+            }
+        }
+        //2.取r1一行与r2的每一行对比，如果无重复则加入字符串str，用逗号分开
         int rowLen = 0;
         String str = "";
         for(int i=0;i<r1.getRowLen();i++){
             boolean isRepead = false;
             for(int j=0;j<r2.getRowLen();j++){
-                if(isSame(r1,r2,i,j)){
+                if(isSameTwo(r1,r2,i,j,temp)){
                     isRepead = true;
                 }
             }
@@ -77,7 +95,7 @@ public class ComputingUtil {
             }
         }
         for(int i=0;i<r2.getRowLen();i++){
-            str = addStr(r2,i,str);
+            str = addStrTwo(r2,i,str,temp);
             rowLen++;
         }
         // todo ---------------------------
@@ -102,13 +120,22 @@ public class ComputingUtil {
             }
         }
         // todo --------------------------- @manqi 同上，修改：满足列名顺序不同也可以比较，想不出来怎么做可以和我讨论下，可能用到哈希表HashMap
-        //取r1一行与r2的每一行对比，如果不重复则加入字符串str，用逗号分开
+        //1.将r1列与r2列对应，temp[a]=b：r1的第a列对应r2的第b列
+        int[] temp = new int[r1.getColLen()];
+        for(int i=0;i<r1.getColLen();i++){
+            for(int j=0;j<r2.getColLen();j++){
+                if(Objects.equals(r1.getColName()[i],r2.getColName()[j])){
+                    temp[i] = j;
+                }
+            }
+        }
+        //2.取r1一行与r2的每一行对比，如果不重复则加入字符串str，用逗号分开
         int rowLen = 0;
         String str = "";
         for(int i=0;i<r1.getRowLen();i++){
             Boolean isRepead = false;
             for(int j=0;j<r2.getRowLen();j++){
-                if(isSame(r1,r2,i,j)){
+                if(isSameTwo(r1,r2,i,j,temp)){
                     isRepead = true;
                 }
             }
@@ -364,11 +391,32 @@ public class ComputingUtil {
         return true;
     }
 
+    //辅助方法1.5：对比表r1的第a行和表r2的第b行是否相同（乱序列时
+    private static boolean isSameTwo(RelationBo r1,RelationBo r2,int a,int b,int[] temp){
+        int colName = r1.getColLen();
+        for(int i=0;i<colName;i++){
+            if(!Objects.equals(r1.getContent()[a][i], r2.getContent()[b][temp[i]])){
+                return false;
+            }
+        }
+        return true;
+    }
+
     //辅助方法2：把表r第x行加入字符串str
     //-已测试
     private static String addStr(RelationBo r,int x,String str){
         for(int i=0;i<r.getColLen();i++){
             str+=r.getContent()[x][i];
+            str+=",";
+        }
+        return str;
+    }
+
+    //辅助方法2.5：把表r第x行加入字符串str
+    //-已测试
+    private static String addStrTwo(RelationBo r,int x,String str,int[] temp){
+        for(int i=0;i<r.getColLen();i++){
+            str+=r.getContent()[x][temp[i]];
             str+=",";
         }
         return str;
