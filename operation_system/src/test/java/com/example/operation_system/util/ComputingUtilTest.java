@@ -41,25 +41,25 @@ class ComputingUtilTest {
     };
 
     //bo3
-    private static int bo3RowLen = 2;
+    private static int bo3RowLen = 1;
 
     private static int bo3ColLen = 2;
 
     private static String[] bo3ColName = {"A","B"};
 
     private static String[][] bo3Content = {
-            {"95001", "1"}, {"95002", "2"}
+            {"a", "b"}
     };
 
     //bo4
-    private static int bo4RowLen = 2;
+    private static int bo4RowLen = 1;
 
     private static int bo4ColLen = 2;
 
     private static String[] bo4ColName = {"B","A"};
 
     private static String[][] bo4Content = {
-            {"1","95001"}, {"3","95003"}
+            {"b","a"}
     };
 
     static {
