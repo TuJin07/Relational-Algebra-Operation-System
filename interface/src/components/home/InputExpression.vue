@@ -164,7 +164,6 @@ export default {
           let exp = s.substring(x1, x2 + 1)
           let list = s.substring(x3, x4 + 1)
           // 处理条件式
-          // TODO
           for (let k = 0; k < exp.length; k++) {
             let m = exp[k]
             let str = exp
@@ -221,6 +220,31 @@ export default {
             }]
             // 返回空表
             if (row === 0 && col === 0) {
+              this.$alert('返回空表！', '计算表达式', {
+                confirmButtonText: '确定',
+                callback: action => {
+                  this.$message({
+                    type: 'info',
+                    message: `action: ${action}`
+                  })
+                }
+              })
+            } else if (row === 0) {
+              name = successResponse.data.data.col_name.split(',')
+              let l = []
+              for (let j = 0; j < col; j++) {
+                l.push({
+                  num: name[j],
+                  data: ''
+                })
+              }
+              this.list.push({
+                id: '',
+                dataList: l
+              })
+              this.list.splice(0, 1)
+              this.reDrawTable()
+              console.log(this.list)
               this.$alert('返回空表！', '计算表达式', {
                 confirmButtonText: '确定',
                 callback: action => {
