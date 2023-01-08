@@ -54,7 +54,7 @@ public class WebController {
      */
     @RequestMapping(value = "/api/insert/", method = RequestMethod.POST)
     public Result insertRelation(@RequestBody RelationVo vo) {
-        if (vo.getName() == null) {
+        if (vo.getName() == null || vo.getName().equals("")) {
             return Result.fail("关系名为空");
         }
         if (vo.getContent() == null) {
@@ -70,7 +70,7 @@ public class WebController {
             relationService.insertRelation(vo);
         } catch (ParamLenException e) {
             log.error("[新增关系]参数异常", e);
-            return Result.fail("参数异常");
+            return Result.fail("新增关系的参数异常");
         }
         return Result.success();
     }
