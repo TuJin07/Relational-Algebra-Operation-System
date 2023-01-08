@@ -47,21 +47,21 @@ class ComputingUtilTest {
 
     private static int bo3ColLen = 1;
 
-    private static String[] bo3ColName = {"B"};
+    private static String[] bo3ColName = {"A"};
 
     private static String[][] bo3Content = {
-            {"3"}
+            {"1"}
     };
 
     //bo4
-    private static int bo4RowLen = 1;
+    private static int bo4RowLen = 0;
 
     private static int bo4ColLen = 2;
 
     private static String[] bo4ColName = {"A","B"};
 
     private static String[][] bo4Content = {
-            {"1","2"}
+            {}
     };
 
     static {
