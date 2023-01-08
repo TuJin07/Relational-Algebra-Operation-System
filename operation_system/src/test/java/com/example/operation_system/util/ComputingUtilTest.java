@@ -2,6 +2,7 @@ package com.example.operation_system.util;
 
 import com.example.operation_system.bo.RelationBo;
 import com.example.operation_system.exception.ParamLenException;
+import com.example.operation_system.exception.WrongColumnNameException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
@@ -41,14 +42,14 @@ class ComputingUtilTest {
     };
 
     //bo3
-    private static int bo3RowLen = 0;
+    private static int bo3RowLen = 1;
 
-    private static int bo3ColLen = 0;
+    private static int bo3ColLen = 1;
 
-    private static String[] bo3ColName = {};
+    private static String[] bo3ColName = {"A"};
 
     private static String[][] bo3Content = {
-
+            {"1"}
     };
 
     //bo4
@@ -100,7 +101,7 @@ class ComputingUtilTest {
 
     @Test
     void prod() {
-        RelationBo res = ComputingUtil.prod(bo3, bo4);
+        RelationBo res = ComputingUtil.prod(bo3, bo4,0);
         System.out.println(res);
     }
 
@@ -111,8 +112,8 @@ class ComputingUtilTest {
     }
 
     @Test
-    void project() {
-        int[] cols = new int[]{0};
+    void project() throws WrongColumnNameException {
+        int[] cols = new int[]{3};
         RelationBo res = ComputingUtil.project(bo3,cols);
         System.out.println(res);
     }

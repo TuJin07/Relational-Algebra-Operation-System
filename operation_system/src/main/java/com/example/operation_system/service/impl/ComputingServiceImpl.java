@@ -177,7 +177,7 @@ public class ComputingServiceImpl implements ComputingService {
         return res;
     }
 
-    private int preprocessingUnaryOperator(List<String> res, int tempCount, String elem) throws ComputingException, ParamLenException {
+    private int preprocessingUnaryOperator(List<String> res, int tempCount, String elem) throws ComputingException, ParamLenException, WrongColumnNameException {
 
         // 第0个参数为关系（或是嵌套表达式），其余参数为运算的参数
         String[] params = getParam(elem);
