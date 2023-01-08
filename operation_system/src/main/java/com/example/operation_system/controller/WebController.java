@@ -49,6 +49,9 @@ public class WebController {
         } catch (IllegalOperationException e) {
             log.error("[计算]不合法计算", e);
             return Result.fail("存在不合法的运算，如：结构不同的两个表进行交并差运算等");
+        } catch (RelationNotExistsException e) {
+            log.error("[计算]存在未定义的关系", e);
+            return Result.fail("表达式中存在未定义的关系");
         }
         return Result.success(result);
     }
