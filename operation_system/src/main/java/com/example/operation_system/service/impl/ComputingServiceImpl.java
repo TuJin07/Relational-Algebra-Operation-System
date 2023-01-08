@@ -31,8 +31,11 @@ public class ComputingServiceImpl implements ComputingService {
     @Resource
     private RelationService relationService;
 
+    private int relationCount = 0;
+
     @Override
     public RelationVo compute(String expression) throws ComputingException {
+        relationCount = 0;
         RelationBo result = calculate(expression);
         if (result == null) {
             log.error("计算结果为空");
@@ -79,7 +82,8 @@ public class ComputingServiceImpl implements ComputingService {
                    res = ComputingUtil.or(bo1, bo2);
                    break;
                case Constant.PROD:
-                   res = ComputingUtil.prod(bo1, bo2);
+                   res = ComputingUtil.prod(bo1, bo2, relationCount);
+                   relationCount += 2;
                    break;
                case Constant.DIFF:
                    res = ComputingUtil.diff(bo2, bo1);
