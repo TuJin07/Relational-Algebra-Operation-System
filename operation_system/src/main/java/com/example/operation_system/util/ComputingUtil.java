@@ -184,7 +184,7 @@ public class ComputingUtil {
 
         RelationBo r3 = null;
         try {
-            r3 = new RelationBo(rowLen, r1.getColLen(), r1.getColName(), str);
+            r3 = new RelationBo(rowLen, colLen, colName, str);
         }catch (ParamLenException e){
             System.out.print("参数长度错误");
         }
