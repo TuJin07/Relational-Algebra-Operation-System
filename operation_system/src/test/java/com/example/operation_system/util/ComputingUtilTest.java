@@ -41,14 +41,14 @@ class ComputingUtilTest {
     };
 
     //bo3
-    private static int bo3RowLen = 2;
+    private static int bo3RowLen = 0;
 
-    private static int bo3ColLen = 2;
+    private static int bo3ColLen = 0;
 
-    private static String[] bo3ColName = {"A","B"};
+    private static String[] bo3ColName = {};
 
     private static String[][] bo3Content = {
-            {"95001", "1"}, {"95002", "2"}
+
     };
 
     //bo4
@@ -56,10 +56,10 @@ class ComputingUtilTest {
 
     private static int bo4ColLen = 2;
 
-    private static String[] bo4ColName = {"B","A"};
+    private static String[] bo4ColName = {"A","B"};
 
     private static String[][] bo4Content = {
-            {"1","95001"}, {"3","95003"}
+            {"1","2"},{"3","4"}
     };
 
     static {
@@ -94,28 +94,26 @@ class ComputingUtilTest {
 
     @Test
     void div() {
-        RelationBo res = ComputingUtil.div(bo1, bo2);
+        RelationBo res = ComputingUtil.div(bo4, bo3);
         System.out.println(res);
     }
 
     @Test
     void prod() {
-        RelationBo res = ComputingUtil.prod(bo1, bo2);
+        RelationBo res = ComputingUtil.prod(bo3, bo4);
         System.out.println(res);
     }
 
     @Test
     void select() {
-        RelationBo res = ComputingUtil.select(bo1,"Cno!=2");
+        RelationBo res = ComputingUtil.select(bo3,"A=a");
         System.out.println(res);
     }
 
     @Test
     void project() {
-        int[] cols = new int[2];
-        cols[0] = 1;
-        cols[1] = 2;
-        RelationBo res = ComputingUtil.project(bo1,cols);
+        int[] cols = new int[]{0};
+        RelationBo res = ComputingUtil.project(bo3,cols);
         System.out.println(res);
     }
 

@@ -172,7 +172,6 @@ public class ComputingUtil {
         for(int i=0;i<r2.getColLen();i++){
             colName[num++] = r2ColName[i];
         }
-
         // 双循环将所有情况加入字符串，然后再赋给新表
         String str = "";
         for(int i=0;i<r1.getRowLen();i++){
@@ -181,7 +180,6 @@ public class ComputingUtil {
                 str = addStr(r2,j,str);
             }
         }
-
         RelationBo r3 = null;
         try {
             r3 = new RelationBo(rowLen, colLen, colName, str);
@@ -361,7 +359,6 @@ public class ComputingUtil {
     //8 -----------选择-----------
     public static RelationBo select(RelationBo r, String conditions) {
         List<String> post = parsePostExpression(conditions);
-        //8.2 计算
         String str = "";
         int rowLen = 0;
         for(int i=0;i<r.getRowLen();i++){
