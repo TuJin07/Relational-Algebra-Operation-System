@@ -238,6 +238,18 @@ public class ComputingUtil {
 
     //6 -----------除法-----------
     public static RelationBo div(RelationBo r1, RelationBo r2) {
+        RelationBo r3 = null;
+        //-----修改部分
+        //除数为无列空表,返回r1的有列空表
+        if(r2.getColLen()==0){
+            try {
+                r3 = new RelationBo(0,r1.getColLen(),r1.getColName(), "");
+            }catch (ParamLenException e){
+                System.out.print("参数长度错误");
+            }
+            return r3;
+        }
+        //-----修改部分
         //6.1 先求相同列
         String temp1 = "";        //相同列在r1中的索引
         String temp2 = "";        //相同列在r2中的索引
@@ -274,7 +286,7 @@ public class ComputingUtil {
             r2Temp[i] = Integer.parseInt(r2ColName[i]);
         }
         try{
-            RelationBo  r2New = project(r2,r2Temp);
+            RelationBo r2New = project(r2,r2Temp);
             //6.3 如果r1中某一行的相同列与r2投影的某行相同，则将该行去除相同列加入字符串
             String str = "";
             int rowLen = 0;
@@ -286,16 +298,18 @@ public class ComputingUtil {
                 }
             }
             //6.4 赋给新表
-            RelationBo r3 = null;
             try {
                 r3 = new RelationBo(rowLen, r1.getColLen()-r1Temp.length, newColName, str);
+                int a = r3.getColLen();
+                int b = r3.getRowLen();
+                String[] c = r3.getColName();
             }catch (ParamLenException e){
                 System.out.print("参数长度错误");
             }
         }catch (WrongColumnNameException e) {
             e.printStackTrace();
         }
-        return null;
+        return r3;
     }
 
     //7 -----------连接-----------

@@ -54,14 +54,14 @@ class ComputingUtilTest {
     };
 
     //bo4
-    private static int bo4RowLen = 2;
+    private static int bo4RowLen = 0;
 
     private static int bo4ColLen = 2;
 
     private static String[] bo4ColName = {"A","B"};
 
     private static String[][] bo4Content = {
-            {"1","2"},{"3","4"}
+            {}
     };
 
     static {
@@ -134,14 +134,14 @@ class ComputingUtilTest {
 
     @Test
     void project() throws WrongColumnNameException {
-        int[] cols = new int[]{3};
-        RelationBo res = ComputingUtil.project(bo3,cols);
+        int[] cols = new int[]{0,1};
+        RelationBo res = ComputingUtil.project(bo4,cols);
         System.out.println(res);
     }
 
     @Test
     void join() {
-        RelationBo res = ComputingUtil.join(bo1,bo2);
+        RelationBo res = ComputingUtil.join(ComputingUtil.prod(bo4,bo3,0),bo3);
         System.out.println(res);
     }
 }
