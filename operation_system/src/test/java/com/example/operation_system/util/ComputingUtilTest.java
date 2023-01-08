@@ -56,10 +56,10 @@ class ComputingUtilTest {
 
     private static int bo4ColLen = 2;
 
-    private static String[] bo4ColName = {"B","A"};
+    private static String[] bo4ColName = {"C","D"};
 
     private static String[][] bo4Content = {
-            {"b","a"}
+            {"c", "d"}
     };
 
     static {
@@ -94,13 +94,13 @@ class ComputingUtilTest {
 
     @Test
     void div() {
-        RelationBo res = ComputingUtil.div(bo1, bo2);
+        RelationBo res = ComputingUtil.div(bo1, bo1);
         System.out.println(res);
     }
 
     @Test
     void prod() {
-        RelationBo res = ComputingUtil.prod(bo1, bo2);
+        RelationBo res = ComputingUtil.prod(bo3, bo4);
         System.out.println(res);
     }
 
