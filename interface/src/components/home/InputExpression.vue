@@ -132,8 +132,10 @@ export default {
         let n = ans[i]
         let s = ans
         if (n === '(') ans = s.substring(0, i + 1) + ' ' + s.substring(i + 1, s.length)
-        else if (n === ')') ans = s.substring(0, i) + ' ' + s.substring(i, s.length)
-        else if (n === '∪') ans = s.substring(0, i) + ' #or ' + s.substring(i + 1, s.length)
+        else if (n === ')') {
+          ans = s.substring(0, i) + ' ' + s.substring(i, s.length)
+          i++
+        } else if (n === '∪') ans = s.substring(0, i) + ' #or ' + s.substring(i + 1, s.length)
         else if (n === '∩') ans = s.substring(0, i) + ' #and ' + s.substring(i + 1, s.length)
         else if (n === '−') ans = s.substring(0, i) + ' #diff ' + s.substring(i + 1, s.length)
         else if (n === '×') ans = s.substring(0, i) + ' #prod ' + s.substring(i + 1, s.length)
@@ -275,7 +277,7 @@ export default {
               this.reDrawTable()
             }
           } else if (successResponse.data.code === 400) {
-            this.$alert('提交错误！', '计算表达式', {
+            this.$alert(successResponse.data.msg, '计算表达式', {
               confirmButtonText: '确定',
               callback: action => {
                 this.$message({
