@@ -46,21 +46,21 @@ class ComputingUtilTest {
 
     private static int bo3ColLen = 1;
 
-    private static String[] bo3ColName = {"A"};
+    private static String[] bo3ColName = {"B"};
 
     private static String[][] bo3Content = {
-            {"1"}
+            {"3"}
     };
 
     //bo4
-    private static int bo4RowLen = 2;
+    private static int bo4RowLen = 1;
 
     private static int bo4ColLen = 2;
 
     private static String[] bo4ColName = {"A","B"};
 
     private static String[][] bo4Content = {
-            {"1","2"},{"3","4"}
+            {"1","2"}
     };
 
     static {
@@ -120,7 +120,7 @@ class ComputingUtilTest {
 
     @Test
     void join() {
-        RelationBo res = ComputingUtil.join(bo1,bo2);
+        RelationBo res = ComputingUtil.join(ComputingUtil.prod(bo4,bo3,0),bo3);
         System.out.println(res);
     }
 }

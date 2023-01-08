@@ -311,6 +311,7 @@ public class ComputingUtil {
 
     //7 -----------连接-----------
     public static RelationBo join(RelationBo r1, RelationBo r2) {
+        
         //7.1 求相同列
         String temp1 = "";        //相同列在r1中的索引
         String temp2 = "";        //相同列在r2中的索引
