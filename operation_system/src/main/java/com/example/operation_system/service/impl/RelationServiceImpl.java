@@ -25,7 +25,6 @@ public class RelationServiceImpl implements RelationService {
 
     @Override
     public void insertRelation(RelationVo relationVo) throws ParamLenException {
-        // TODO: 2022/10/18 把vo->bo的过程转移到bo类内 @manqi
         String[] colName = getColName(relationVo);
         String[][] content = getContent(relationVo);
         RelationBo bo = new RelationBo(relationVo.getRowLen(), relationVo.getColLen(), colName, content);
@@ -63,7 +62,6 @@ public class RelationServiceImpl implements RelationService {
         }
         return res;
     }
-
 
     private String[][] getContent(RelationVo vo) throws ParamLenException {
         String[] temp = vo.getContent().split(",");

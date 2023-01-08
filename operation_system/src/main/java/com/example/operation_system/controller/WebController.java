@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -55,22 +56,22 @@ public class WebController {
     @RequestMapping(value = "/api/insert/", method = RequestMethod.POST)
     public Result insertRelation(@RequestBody RelationVo vo) {
         if (vo.getName() == null || vo.getName().equals("")) {
-            return Result.fail("关系名为空");
+            return Result.fail("关系名不能为空");
         }
-        if (vo.getContent() == null) {
-            return Result.fail("关系内容为空");
+        if (vo.getContent() == null || vo.getContent().equals("")) {
+            return Result.fail("关系表不能为空");
         }
         if (vo.getColLen() == 0 || vo.getRowLen() == 0) {
-            return Result.fail("列长或行长为空");
+            return Result.fail("列长或行长不能为零或为空");
         }
         if (vo.getColName() == null || vo.getColName().split(",").length != vo.getColLen()) {
-            return Result.fail("列名有误");
+            return Result.fail("列名个数与列数不匹配");
         }
         try {
             relationService.insertRelation(vo);
         } catch (ParamLenException e) {
             log.error("[新增关系]参数异常", e);
-            return Result.fail("新增关系的参数异常");
+            return Result.fail("关系的表内容与行列不匹配");
         }
         return Result.success();
     }
@@ -111,4 +112,8 @@ public class WebController {
         return Result.success(vo);
     }
 
+    public static void main(String[] args) {
+        String s = "a,b,";
+        System.out.println(Arrays.toString(s.split(",")));
+    }
 }
