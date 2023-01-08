@@ -113,8 +113,8 @@ class ComputingUtilTest {
 
     @Test
     void project() throws WrongColumnNameException {
-        int[] cols = new int[]{3};
-        RelationBo res = ComputingUtil.project(bo3,cols);
+        int[] cols = new int[]{0,1};
+        RelationBo res = ComputingUtil.project(bo4,cols);
         System.out.println(res);
     }
 
