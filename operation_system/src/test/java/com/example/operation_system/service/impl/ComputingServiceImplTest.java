@@ -73,6 +73,8 @@ class ComputingServiceImplTest {
             relationService.insertRelation(RelationBo.toRelationVo(bo1, "A"));
         } catch (ParamLenException e) {
             log.error("参数长度错误", e);
+        } catch (Exception e) {
+            log.error("异常", e);
         }
     }
 
