@@ -4,6 +4,7 @@ import com.example.operation_system.bo.RelationBo;
 import com.example.operation_system.constant.Constant;
 import com.example.operation_system.exception.ComputingException;
 import com.example.operation_system.exception.ParamLenException;
+import com.example.operation_system.exception.WrongColumnNameException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
@@ -157,7 +158,7 @@ public class ComputingUtil {
 
     //4 -----------笛卡尔积-----------
     //三元组*三元组=九元组
-    public static RelationBo prod(RelationBo r1, RelationBo r2) {
+    public static RelationBo prod(RelationBo r1, RelationBo r2,int count) {
         //处理必要数据
         int rowLen = r1.getRowLen()*r2.getRowLen();
         int colLen = r1.getColLen()+r2.getColLen();
@@ -182,11 +183,15 @@ public class ComputingUtil {
             if(!temp1[i]){
                 colName[num++] = r1ColName[i];
             }else{
-                colName[num++] = "r1的名字"+"."+r1ColName[i];
+                colName[num++] = "Relation"+count+"."+r1ColName[i];
             }
         }
         for(int i=0;i<r2.getColLen();i++){
-            colName[num++] = r2ColName[i];
+            if(!temp2[i]){
+                colName[num++] = r2ColName[i];
+            }else{
+                colName[num++] = "Relation"+(count+1)+"."+r2ColName[i];
+            }
         }
         //修改部分↑
         //双循环将所有情况加入字符串，然后再赋给新表
@@ -208,14 +213,16 @@ public class ComputingUtil {
 
     //5 -----------投影-----------
     //取其中的指定列组成新表
-    public static RelationBo project(RelationBo r, int[] cols) {
+    public static RelationBo project(RelationBo r, int[] cols) throws WrongColumnNameException{
         //-----修改部分：判断cols内列是否合法
         int colNum = r.getColLen();
         if(cols.length==0){
-
+            throw new WrongColumnNameException();
         }
         for(int i=0;i<cols.length;i++)
-            if(cols[i]>=colNum){}
+            if(cols[i]>=colNum){
+                throw new WrongColumnNameException();
+            }
         //-----修改部分
         //5.1 遍历各行找指定列元素加入字符串str
         String str = "";
@@ -277,25 +284,29 @@ public class ComputingUtil {
             r1Temp[i] = Integer.parseInt(r1ColName[i]);
             r2Temp[i] = Integer.parseInt(r2ColName[i]);
         }
-        RelationBo r2New = project(r2,r2Temp);
-        //6.3 如果r1中某一行的相同列与r2投影的某行相同，则将该行去除相同列加入字符串
-        String str = "";
-        int rowLen = 0;
-        //对于r1的每一行的特定列元素都需要与r2New的每一行对比
-        for(int i=0;i<r1.getRowLen();i++){
-            if(isHasSpecial(r1,r2New,i,r1Temp)){
-                str = deleteSpecialAdd(r1,i,r1Temp,str);
-                rowLen++;
+        try{
+            RelationBo  r2New = project(r2,r2Temp);
+            //6.3 如果r1中某一行的相同列与r2投影的某行相同，则将该行去除相同列加入字符串
+            String str = "";
+            int rowLen = 0;
+            //对于r1的每一行的特定列元素都需要与r2New的每一行对比
+            for(int i=0;i<r1.getRowLen();i++){
+                if(isHasSpecial(r1,r2New,i,r1Temp)){
+                    str = deleteSpecialAdd(r1,i,r1Temp,str);
+                    rowLen++;
+                }
             }
+            //6.4 赋给新表
+            RelationBo r3 = null;
+            try {
+                r3 = new RelationBo(rowLen, r1.getColLen()-r1Temp.length, newColName, str);
+            }catch (ParamLenException e){
+                System.out.print("参数长度错误");
+            }
+        }catch (WrongColumnNameException e) {
+            e.printStackTrace();
         }
-        //6.4 赋给新表
-        RelationBo r3 = null;
-        try {
-            r3 = new RelationBo(rowLen, r1.getColLen()-r1Temp.length, newColName, str);
-        }catch (ParamLenException e){
-            System.out.print("参数长度错误");
-        }
-        return r3;
+        return null;
     }
 
     //7 -----------连接-----------
@@ -316,7 +327,7 @@ public class ComputingUtil {
         }
         //处理无相同列的情况
         if(temp1==""&&temp2==""){
-            return prod(r1,r2);
+            return prod(r1,r2,0);
         }
         String[] temp1Col = temp1.split(",");
         String[] temp2Col = temp2.split(",");

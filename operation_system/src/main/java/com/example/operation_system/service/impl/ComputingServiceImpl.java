@@ -4,6 +4,7 @@ import com.example.operation_system.bo.RelationBo;
 import com.example.operation_system.constant.Constant;
 import com.example.operation_system.exception.ComputingException;
 import com.example.operation_system.exception.ParamLenException;
+import com.example.operation_system.exception.WrongColumnNameException;
 import com.example.operation_system.service.ComputingService;
 import com.example.operation_system.service.RelationService;
 import com.example.operation_system.util.ComputingUtil;
@@ -176,7 +177,7 @@ public class ComputingServiceImpl implements ComputingService {
         return res;
     }
 
-    private int preprocessingUnaryOperator(List<String> res, int tempCount, String elem) throws ComputingException, ParamLenException {
+    private int preprocessingUnaryOperator(List<String> res, int tempCount, String elem) throws ComputingException, ParamLenException, WrongColumnNameException {
 
         // 第0个参数为关系（或是嵌套表达式），其余参数为运算的参数
         String[] params = getParam(elem);
