@@ -104,7 +104,8 @@ public class ComputingServiceImpl implements ComputingService {
      * @return
      */
     private List<String> parse(String expression) throws ComputingException, ParamLenException, WrongColumnNameException, IllegalOperationException {
-        String[] elems = expression.split(" ");
+//        String[] elems = expression.split(" ");
+        String[] elems = splitExpression(expression);
         List<String> res = new ArrayList<>();
         Deque<String> stack = new ArrayDeque<>();
         // 临时表计数
