@@ -1,9 +1,6 @@
 package com.example.operation_system.controller;
 
-import com.example.operation_system.exception.ComputingException;
-import com.example.operation_system.exception.ParamLenException;
-import com.example.operation_system.exception.RelationAlreadyExistsException;
-import com.example.operation_system.exception.WrongColumnNameException;
+import com.example.operation_system.exception.*;
 import com.example.operation_system.response.Result;
 import com.example.operation_system.service.ComputingService;
 import com.example.operation_system.service.RelationService;
@@ -80,6 +77,9 @@ public class WebController {
         } catch (RelationAlreadyExistsException e) {
             log.error("[新增关系]已存在同名关系", e);
             return Result.fail("已存在同名关系");
+        } catch (RepeatedColumnNameException e) {
+            log.error("[新增关系]存在同名列", e);
+            return Result.fail("关系中存在同名列");
         }
         return Result.success();
     }

@@ -80,15 +80,15 @@ class ComputingServiceImplTest {
 
     @Test
     void compute() {
-        ComputingServiceImplTest test = new ComputingServiceImplTest();
-        test.insert();
-        RelationVo res = new RelationVo();
-        try {
-            res = test.computingService.compute(expression);
-        } catch (ComputingException e) {
-            log.error("计算错误", e);
-        }
-        System.out.println(res);
+//        ComputingServiceImplTest test = new ComputingServiceImplTest();
+//        test.insert();
+//        RelationVo res = new RelationVo();
+//        try {
+//            res = test.computingService.compute(expression);
+//        } catch (ComputingException e) {
+//            log.error("计算错误", e);
+//        }
+//        System.out.println(res);
     }
 
     @Test

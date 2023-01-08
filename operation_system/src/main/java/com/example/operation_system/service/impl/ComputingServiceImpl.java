@@ -50,7 +50,7 @@ public class ComputingServiceImpl implements ComputingService {
      * @param expression
      * @return
      */
-    private RelationBo calculate(String expression) throws ComputingException {
+    private RelationBo calculate(String expression) throws ComputingException, WrongColumnNameException {
         List<String> post = null;
         try {
             post = parse(expression);
@@ -105,7 +105,7 @@ public class ComputingServiceImpl implements ComputingService {
      * @param expression
      * @return
      */
-    private List<String> parse(String expression) throws ComputingException, ParamLenException {
+    private List<String> parse(String expression) throws ComputingException, ParamLenException, WrongColumnNameException {
         String[] elems = expression.split(" ");
         List<String> res = new ArrayList<>();
         Deque<String> stack = new ArrayDeque<>();
