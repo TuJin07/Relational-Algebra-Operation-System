@@ -2,6 +2,7 @@ package com.example.operation_system.service.impl;
 
 import com.example.operation_system.bo.RelationBo;
 import com.example.operation_system.exception.ParamLenException;
+import com.example.operation_system.exception.RelationAlreadyExistsException;
 import com.example.operation_system.service.RelationService;
 import com.example.operation_system.vo.RelationVo;
 import org.springframework.stereotype.Service;
@@ -24,10 +25,13 @@ public class RelationServiceImpl implements RelationService {
     private static final ConcurrentHashMap<String, RelationBo> relations = new ConcurrentHashMap<>();
 
     @Override
-    public void insertRelation(RelationVo relationVo) throws ParamLenException {
+    public void insertRelation(RelationVo relationVo) throws ParamLenException, RelationAlreadyExistsException {
         String[] colName = getColName(relationVo);
         String[][] content = getContent(relationVo);
         RelationBo bo = new RelationBo(relationVo.getRowLen(), relationVo.getColLen(), colName, content);
+        if (relations.containsKey(relationVo.getName())) {
+            throw new RelationAlreadyExistsException();
+        }
         relations.put(relationVo.getName(), bo);
     }
 

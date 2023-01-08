@@ -2,6 +2,7 @@ package com.example.operation_system.controller;
 
 import com.example.operation_system.exception.ComputingException;
 import com.example.operation_system.exception.ParamLenException;
+import com.example.operation_system.exception.RelationAlreadyExistsException;
 import com.example.operation_system.response.Result;
 import com.example.operation_system.service.ComputingService;
 import com.example.operation_system.service.RelationService;
@@ -72,6 +73,9 @@ public class WebController {
         } catch (ParamLenException e) {
             log.error("[新增关系]参数异常", e);
             return Result.fail("关系的表内容与行列不匹配");
+        } catch (RelationAlreadyExistsException e) {
+            log.error("[新增关系]已存在同名关系", e);
+            return Result.fail("已存在同名关系");
         }
         return Result.success();
     }
