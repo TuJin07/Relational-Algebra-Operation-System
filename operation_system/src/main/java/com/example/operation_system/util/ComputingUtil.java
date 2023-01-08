@@ -286,7 +286,7 @@ public class ComputingUtil {
             r2Temp[i] = Integer.parseInt(r2ColName[i]);
         }
         try{
-            RelationBo  r2New = project(r2,r2Temp);
+            RelationBo r2New = project(r2,r2Temp);
             //6.3 如果r1中某一行的相同列与r2投影的某行相同，则将该行去除相同列加入字符串
             String str = "";
             int rowLen = 0;
