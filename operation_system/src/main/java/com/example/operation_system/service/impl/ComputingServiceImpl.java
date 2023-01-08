@@ -14,10 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
+import java.util.*;
 
 /**
  * @program: operation_system
@@ -213,5 +210,31 @@ public class ComputingServiceImpl implements ComputingService {
             tempCount++;
         }
         return tempCount;
+    }
+
+    private String[] splitExpression(String expression) {
+        List<String> res = new ArrayList<>();
+        int i = 0, j = 0, cnt = 0;
+        while (j < expression.length()) {
+            if (expression.charAt(j) == '[') {
+                cnt++;
+            }
+            if (expression.charAt(j) == ']') {
+                cnt--;
+            }
+            if (expression.charAt(j) == ' ' && cnt == 0) {
+                res.add(expression.substring(i, j));
+                i = j + 1;
+            }
+            j++;
+        }
+        res.add(expression.substring(i, j));
+        return res.toArray(new String[0]);
+    }
+
+    public static void main(String[] args) {
+        ComputingServiceImpl csi = new ComputingServiceImpl();
+        String expression = "A #and B #or #select[A #diff B #and #project[A #and B,a,1],a=1,1] #prod C";
+        System.out.println(Arrays.toString(csi.splitExpression(expression)));
     }
 }
