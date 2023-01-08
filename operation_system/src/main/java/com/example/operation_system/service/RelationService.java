@@ -3,6 +3,7 @@ package com.example.operation_system.service;
 import com.example.operation_system.bo.RelationBo;
 import com.example.operation_system.exception.ParamLenException;
 import com.example.operation_system.exception.RelationAlreadyExistsException;
+import com.example.operation_system.exception.RepeatedColumnNameException;
 import com.example.operation_system.vo.RelationVo;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,7 @@ public interface RelationService {
      * @param relationVo 前端传来的Relations
      * @throws ParamLenException 参数不对时抛出此异常
      */
-    void insertRelation(RelationVo relationVo) throws ParamLenException, RelationAlreadyExistsException;
+    void insertRelation(RelationVo relationVo) throws ParamLenException, RelationAlreadyExistsException, RepeatedColumnNameException;
 
     void insertRelation(RelationBo relationBo, String name) throws ParamLenException;
 

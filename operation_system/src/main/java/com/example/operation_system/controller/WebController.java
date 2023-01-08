@@ -3,6 +3,7 @@ package com.example.operation_system.controller;
 import com.example.operation_system.exception.ComputingException;
 import com.example.operation_system.exception.ParamLenException;
 import com.example.operation_system.exception.RelationAlreadyExistsException;
+import com.example.operation_system.exception.WrongColumnNameException;
 import com.example.operation_system.response.Result;
 import com.example.operation_system.service.ComputingService;
 import com.example.operation_system.service.RelationService;
@@ -45,6 +46,9 @@ public class WebController {
         } catch (ComputingException e) {
             log.error("[计算]计算异常", e);
             return Result.fail("计算异常");
+        } catch (WrongColumnNameException e) {
+            log.error("[计算]错误列名", e);
+            return Result.fail("表达式中有不存在的列名");
         }
         return Result.success(result);
     }

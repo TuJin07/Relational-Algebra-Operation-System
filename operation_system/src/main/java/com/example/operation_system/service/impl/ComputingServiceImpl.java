@@ -4,6 +4,7 @@ import com.example.operation_system.bo.RelationBo;
 import com.example.operation_system.constant.Constant;
 import com.example.operation_system.exception.ComputingException;
 import com.example.operation_system.exception.ParamLenException;
+import com.example.operation_system.exception.WrongColumnNameException;
 import com.example.operation_system.service.ComputingService;
 import com.example.operation_system.service.RelationService;
 import com.example.operation_system.util.ComputingUtil;
@@ -34,7 +35,7 @@ public class ComputingServiceImpl implements ComputingService {
     private int relationCount = 0;
 
     @Override
-    public RelationVo compute(String expression) throws ComputingException {
+    public RelationVo compute(String expression) throws ComputingException, WrongColumnNameException {
         relationCount = 0;
         RelationBo result = calculate(expression);
         if (result == null) {
