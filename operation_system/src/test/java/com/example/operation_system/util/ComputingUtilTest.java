@@ -1,6 +1,7 @@
 package com.example.operation_system.util;
 
 import com.example.operation_system.bo.RelationBo;
+import com.example.operation_system.exception.IllegalOperationException;
 import com.example.operation_system.exception.ParamLenException;
 import com.example.operation_system.exception.WrongColumnNameException;
 import lombok.extern.slf4j.Slf4j;
@@ -77,19 +78,34 @@ class ComputingUtilTest {
 
     @Test
     void and() {
-        RelationBo res = ComputingUtil.and(bo3, bo4);
+        RelationBo res = null;
+        try {
+            res = ComputingUtil.and(bo3, bo4);
+        } catch (IllegalOperationException e) {
+            e.printStackTrace();
+        }
         System.out.println(res);
     }
 
     @Test
     void or() {
-        RelationBo res = ComputingUtil.or(bo3, bo4);
+        RelationBo res = null;
+        try {
+            res = ComputingUtil.or(bo3, bo4);
+        } catch (IllegalOperationException e) {
+            e.printStackTrace();
+        }
         System.out.println(res);
     }
 
     @Test
     void diff() {
-        RelationBo res = ComputingUtil.diff(bo3, bo4);
+        RelationBo res = null;
+        try {
+            res = ComputingUtil.diff(bo3, bo4);
+        } catch (IllegalOperationException e) {
+            e.printStackTrace();
+        }
         System.out.println(res);
     }
 
@@ -107,7 +123,12 @@ class ComputingUtilTest {
 
     @Test
     void select() {
-        RelationBo res = ComputingUtil.select(bo3,"A=a");
+        RelationBo res = null;
+        try {
+            res = ComputingUtil.select(bo3,"A=a");
+        } catch (WrongColumnNameException e) {
+            e.printStackTrace();
+        }
         System.out.println(res);
     }
 

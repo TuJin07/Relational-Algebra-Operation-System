@@ -41,10 +41,11 @@ public class Constant {
         PRIORITY.put(SELECT, 1);
         PRIORITY.put(PROJECT, 1);
         PRIORITY.put(JOIN, 2);
-        PRIORITY.put(PROD, 3);
-        PRIORITY.put(DIV, 3);
-        PRIORITY.put(AND, 4);
-        PRIORITY.put(OR, 5);
+        PRIORITY.put(DIFF, 3);
+        PRIORITY.put(PROD, 4);
+        PRIORITY.put(DIV, 4);
+        PRIORITY.put(AND, 5);
+        PRIORITY.put(OR, 6);
 
         UNARY_OPERATOR = new HashSet<>();
         UNARY_OPERATOR.add(PROJECT);

@@ -46,6 +46,9 @@ public class WebController {
         } catch (WrongColumnNameException e) {
             log.error("[计算]错误列名", e);
             return Result.fail("表达式中有不存在的列名");
+        } catch (IllegalOperationException e) {
+            log.error("[计算]不合法计算", e);
+            return Result.fail("存在不合法的运算，如：结构不同的两个表进行交并差运算等");
         }
         return Result.success(result);
     }
