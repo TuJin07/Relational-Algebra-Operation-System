@@ -222,6 +222,7 @@ export default {
             }]
             // 返回空表
             if (row === 0 && col === 0) {
+              this.reDrawTable() // 刷新显示空表
               this.$alert('返回空表！', '计算表达式', {
                 confirmButtonText: '确定',
                 callback: action => {
