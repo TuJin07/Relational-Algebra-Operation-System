@@ -117,7 +117,7 @@ export default {
             })
             item.dis = true // 不可二次提交
           } else if (successResponse.data.code === 400) {
-            this.$alert('输入关系表格式错误！', '确认关系', {
+            this.$alert(successResponse.data.msg, '确认关系', {
               confirmButtonText: '确定',
               callback: action => {
                 this.$message({
