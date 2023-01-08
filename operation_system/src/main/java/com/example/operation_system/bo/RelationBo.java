@@ -2,6 +2,7 @@ package com.example.operation_system.bo;
 
 import com.example.operation_system.constant.Constant;
 import com.example.operation_system.exception.ParamLenException;
+import com.example.operation_system.exception.WrongColumnNameException;
 import com.example.operation_system.vo.RelationVo;
 import lombok.Getter;
 import lombok.ToString;
@@ -134,13 +135,17 @@ public class RelationBo {
         return content[row];
     }
 
-    public int getColIndexByName(String name) {
-        int index = 0;
+    public int getColIndexByName(String name) throws WrongColumnNameException {
+        int index = -1;
         for (int i = 0; i < colName.length; i++) {
             if (name.equals(colName[i])) {
                 index = i;
                 break;
             }
+        }
+        // 找不到对应的列
+        if (index == -1) {
+            throw new WrongColumnNameException();
         }
         return index;
     }

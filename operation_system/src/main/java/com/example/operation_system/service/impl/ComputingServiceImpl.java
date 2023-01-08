@@ -3,6 +3,7 @@ package com.example.operation_system.service.impl;
 import com.example.operation_system.bo.RelationBo;
 import com.example.operation_system.constant.Constant;
 import com.example.operation_system.exception.ComputingException;
+import com.example.operation_system.exception.IllegalOperationException;
 import com.example.operation_system.exception.ParamLenException;
 import com.example.operation_system.exception.WrongColumnNameException;
 import com.example.operation_system.service.ComputingService;
@@ -35,7 +36,7 @@ public class ComputingServiceImpl implements ComputingService {
     private int relationCount = 0;
 
     @Override
-    public RelationVo compute(String expression) throws ComputingException, WrongColumnNameException {
+    public RelationVo compute(String expression) throws ComputingException, WrongColumnNameException, IllegalOperationException {
         relationCount = 0;
         RelationBo result = calculate(expression);
         if (result == null) {
@@ -50,7 +51,7 @@ public class ComputingServiceImpl implements ComputingService {
      * @param expression
      * @return
      */
-    private RelationBo calculate(String expression) throws ComputingException, WrongColumnNameException {
+    private RelationBo calculate(String expression) throws ComputingException, WrongColumnNameException, IllegalOperationException {
         List<String> post = null;
         try {
             post = parse(expression);
@@ -105,7 +106,7 @@ public class ComputingServiceImpl implements ComputingService {
      * @param expression
      * @return
      */
-    private List<String> parse(String expression) throws ComputingException, ParamLenException, WrongColumnNameException {
+    private List<String> parse(String expression) throws ComputingException, ParamLenException, WrongColumnNameException, IllegalOperationException {
         String[] elems = expression.split(" ");
         List<String> res = new ArrayList<>();
         Deque<String> stack = new ArrayDeque<>();
@@ -177,7 +178,7 @@ public class ComputingServiceImpl implements ComputingService {
         return res;
     }
 
-    private int preprocessingUnaryOperator(List<String> res, int tempCount, String elem) throws ComputingException, ParamLenException, WrongColumnNameException {
+    private int preprocessingUnaryOperator(List<String> res, int tempCount, String elem) throws ComputingException, ParamLenException, WrongColumnNameException, IllegalOperationException {
 
         // 第0个参数为关系（或是嵌套表达式），其余参数为运算的参数
         String[] params = getParam(elem);

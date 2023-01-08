@@ -89,12 +89,6 @@ public class RelationServiceImpl implements RelationService {
         return res;
     }
 
-    private boolean checkRepeatedColumnName(RelationBo bo) {
-        String[] colName = bo.getColName();
-        Set<String> set = new HashSet<>(Arrays.asList(colName));
-        return set.size() == colName.length;
-    }
-
     private boolean checkRepeatedColumnName(RelationVo vo) {
         String[] colName = vo.getColName().split(",");
         Set<String> set = new HashSet<>(Arrays.asList(colName));

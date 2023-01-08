@@ -3,6 +3,7 @@ package com.example.operation_system.util;
 import com.example.operation_system.bo.RelationBo;
 import com.example.operation_system.constant.Constant;
 import com.example.operation_system.exception.ComputingException;
+import com.example.operation_system.exception.IllegalOperationException;
 import com.example.operation_system.exception.ParamLenException;
 import com.example.operation_system.exception.WrongColumnNameException;
 import lombok.extern.slf4j.Slf4j;
@@ -20,14 +21,10 @@ public class ComputingUtil {
 
     //1 -----------交-----------
     //选出两个关系内相同的元组
-    public static RelationBo and(RelationBo r1, RelationBo r2) {
-        // 两个表结构相同才有and的必要（列名集相同，但可不同序）：如果不同直接返回空行空列的空表
+    public static RelationBo and(RelationBo r1, RelationBo r2) throws IllegalOperationException {
+        // 两个表结构相同才有and的必要（列名集相同，但可不同序）：如果不同，直接抛异常
         if (!checkColName(r1, r2)) {
-            try {
-                return new RelationBo(0, 0, new String[0], "");
-            } catch (ParamLenException e) {
-                e.printStackTrace();
-            }
+            throw new IllegalOperationException();
         }
         // todo --------------------------- @manqi 修改：满足列名顺序不同也可以比较，想不出来怎么做可以和我讨论下，可能用到哈希表HashMap
         //1.将r1列与r2列对应，temp[a]=b：r1的第a列对应r2的第b列
@@ -61,14 +58,10 @@ public class ComputingUtil {
     }
     //2 -----------并-----------
     //合并两个集合，去掉重复的
-    public static RelationBo or(RelationBo r1, RelationBo r2) {
-        // 两个表结构相同才有or的必要（列名集相同，但可不同序）：如果不同直接返回空行空列的空表
+    public static RelationBo or(RelationBo r1, RelationBo r2) throws IllegalOperationException {
+        // 两个表结构相同才有and的必要（列名集相同，但可不同序）：如果不同，直接抛异常
         if (!checkColName(r1, r2)) {
-            try {
-                return new RelationBo(0, 0, new String[0], "");
-            } catch (ParamLenException e) {
-                e.printStackTrace();
-            }
+            throw new IllegalOperationException();
         }
         // todo --------------------------- @manqi 同上and，修改：满足列名顺序不同也可以比较，想不出来怎么做可以和我讨论下，可能用到哈希表HashMap
         //1.将r1列与r2列对应，temp[a]=b：r1的第a列对应r2的第b列
@@ -111,14 +104,10 @@ public class ComputingUtil {
 
     //3 -----------差-----------
     //保留前者中与后者不重复的项
-    public static RelationBo diff(RelationBo r1, RelationBo r2) {
-        // 两个表结构相同才有diff的必要（列名集相同，但可不同序）：如果不同直接返回空行空列的空表
+    public static RelationBo diff(RelationBo r1, RelationBo r2) throws IllegalOperationException {
+        // 两个表结构相同才有and的必要（列名集相同，但可不同序）：如果不同，直接抛异常
         if (!checkColName(r1, r2)) {
-            try {
-                return new RelationBo(0, 0, new String[0], "");
-            } catch (ParamLenException e) {
-                e.printStackTrace();
-            }
+            throw new IllegalOperationException();
         }
         // todo --------------------------- @manqi 同上，修改：满足列名顺序不同也可以比较，想不出来怎么做可以和我讨论下，可能用到哈希表HashMap
         //1.将r1列与r2列对应，temp[a]=b：r1的第a列对应r2的第b列
@@ -394,7 +383,15 @@ public class ComputingUtil {
     }
 
     //8 -----------选择-----------
-    public static RelationBo select(RelationBo r, String conditions) {
+    public static RelationBo select(RelationBo r, String conditions) throws WrongColumnNameException {
+        // 条件为空，返回原表
+        if (conditions.equals("")) {
+            return r;
+        }
+        // 空表直接返回原表
+        if (r.getRowLen() == 0) {
+            return r;
+        }
         List<String> post = parsePostExpression(conditions);
         String str = "";
         int rowLen = 0;
@@ -563,7 +560,7 @@ public class ComputingUtil {
      * @param curRow 当前判断行
      * @return 当前行是否符合结果
      */
-    private static boolean judgeMultipleCondition(List<String> conditions, RelationBo bo, int curRow) {
+    private static boolean judgeMultipleCondition(List<String> conditions, RelationBo bo, int curRow) throws WrongColumnNameException {
         Deque<Boolean> stack = new ArrayDeque<>();
         for (String elem : conditions) {
             if (elem.charAt(0) != '$') {
@@ -596,7 +593,7 @@ public class ComputingUtil {
      * @param curRow 需要判断的行
      * @return 当前行是否符合条件
      */
-    private static boolean judgeSingleCondition(String condition, RelationBo bo, int curRow) {
+    private static boolean judgeSingleCondition(String condition, RelationBo bo, int curRow) throws WrongColumnNameException {
         //9.1 处理condition: 列名 符号 内容
         String sysmbol = isWhat(condition);
         //9.2 判断
