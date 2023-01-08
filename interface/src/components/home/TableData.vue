@@ -2,7 +2,7 @@
   <el-form>
     <h3 style="float: left">添加现成表</h3>
     <br><br><br><br>
-    <strong>学生表 Student</strong><el-button @click="submitStudent" style="float: right">添加</el-button>
+    <strong>学生表 Student</strong><el-button @click="submitStudent" style="float: right" :disabled="student.dis">添加</el-button>
     <el-table
       :data="Student"
       style="width: 100%">
@@ -26,7 +26,7 @@
       </el-table-column>
     </el-table>
     <br>
-    <strong>课程表 Course</strong><el-button @click="submitCourse" style="float: right">添加</el-button>
+    <strong>课程表 Course</strong><el-button @click="submitCourse" style="float: right" :disabled="course.dis">添加</el-button>
     <el-table
       :data="Course"
       style="width: 100%">
@@ -46,7 +46,7 @@
       </el-table-column>
     </el-table>
     <br>
-    <strong>成绩表 SC</strong><el-button @click="submitSC" style="float: right">添加</el-button>
+    <strong>成绩表 SC</strong><el-button @click="submitSC" style="float: right" :disabled="sc.dis">添加</el-button>
     <el-table
       :data="SC"
       style="width: 100%">
@@ -73,6 +73,15 @@ export default {
   name: 'TableData',
   data () {
     return {
+      student: {
+        dis: false
+      },
+      course: {
+        dis: false
+      },
+      sc: {
+        dis: false
+      },
       Student: [{
         Sno: '95001',
         Sname: '李勇',
@@ -137,6 +146,7 @@ export default {
                 })
               }
             })
+            this.student.dis = true
           }
         })
     },
@@ -160,6 +170,7 @@ export default {
                 })
               }
             })
+            this.course.dis = true
           }
         })
     },
@@ -183,6 +194,7 @@ export default {
                 })
               }
             })
+            this.sc.dis = true
           }
         })
     }

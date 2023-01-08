@@ -3,10 +3,14 @@ package com.example.operation_system.service.impl;
 import com.example.operation_system.bo.RelationBo;
 import com.example.operation_system.exception.ParamLenException;
 import com.example.operation_system.exception.RelationAlreadyExistsException;
+import com.example.operation_system.exception.RepeatedColumnNameException;
 import com.example.operation_system.service.RelationService;
 import com.example.operation_system.vo.RelationVo;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -25,7 +29,10 @@ public class RelationServiceImpl implements RelationService {
     private static final ConcurrentHashMap<String, RelationBo> relations = new ConcurrentHashMap<>();
 
     @Override
-    public void insertRelation(RelationVo relationVo) throws ParamLenException, RelationAlreadyExistsException {
+    public void insertRelation(RelationVo relationVo) throws ParamLenException, RelationAlreadyExistsException, RepeatedColumnNameException {
+        if (!checkRepeatedColumnName(relationVo)) {
+            throw new RepeatedColumnNameException();
+        }
         String[] colName = getColName(relationVo);
         String[][] content = getContent(relationVo);
         RelationBo bo = new RelationBo(relationVo.getRowLen(), relationVo.getColLen(), colName, content);
@@ -80,5 +87,17 @@ public class RelationServiceImpl implements RelationService {
             }
         }
         return res;
+    }
+
+    private boolean checkRepeatedColumnName(RelationBo bo) {
+        String[] colName = bo.getColName();
+        Set<String> set = new HashSet<>(Arrays.asList(colName));
+        return set.size() == colName.length;
+    }
+
+    private boolean checkRepeatedColumnName(RelationVo vo) {
+        String[] colName = vo.getColName().split(",");
+        Set<String> set = new HashSet<>(Arrays.asList(colName));
+        return set.size() == colName.length;
     }
 }

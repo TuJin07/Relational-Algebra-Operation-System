@@ -1,6 +1,7 @@
 package com.example.operation_system.service;
 
 import com.example.operation_system.exception.ComputingException;
+import com.example.operation_system.exception.WrongColumnNameException;
 import com.example.operation_system.vo.RelationVo;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,6 @@ public interface ComputingService {
      * @param expression 关系代数表达式
      * @return 计算后的结果
      */
-    RelationVo compute(String expression) throws ComputingException;
+    RelationVo compute(String expression) throws ComputingException, WrongColumnNameException;
 
 }

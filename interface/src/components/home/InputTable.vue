@@ -6,18 +6,18 @@
       <el-form-item v-for="domain in domains" :key="domain.key">
         <el-row>
           关系
-          <el-input v-model="domain.name" style="width: 18%" placeholder="关系名"/>
-          <el-input v-model="domain.row" style="width: 18%" placeholder="行数/元组数"/>
-          <el-input v-model="domain.col" style="width: 18%" placeholder="列数/属性数"/>
+          <el-input v-model="domain.name" style="width: 18%" placeholder="关系名" :disabled="domain.dis"/>
+          <el-input v-model="domain.row" style="width: 18%" placeholder="行数/元组数" :disabled="domain.dis"/>
+          <el-input v-model="domain.col" style="width: 18%" placeholder="列数/属性数" :disabled="domain.dis"/>
           <el-button @click="submit(domain)" :disabled="domain.dis">确认关系</el-button>
           <el-button @click.prevent="removeDomain(domain)">删除</el-button>
         </el-row>
         <el-row>
-          <el-input v-model="domain.col_name" style="width: 90%" placeholder="列名（用英文逗号分格）"/>
+          <el-input v-model="domain.col_name" style="width: 90%" placeholder="列名（用英文逗号分格）" :disabled="domain.dis"/>
         </el-row>
         <el-row>
           <el-input v-model="domain.text" style="width: 90%"
-                    type="textarea" autosize placeholder="输入关系表，属性间以英文逗号分隔，行间以回车分隔"/>
+                    type="textarea" autosize placeholder="输入关系表，属性间以英文逗号分隔，行间以回车分隔" :disabled="domain.dis"/>
         </el-row>
       </el-form-item>
     </el-row>
