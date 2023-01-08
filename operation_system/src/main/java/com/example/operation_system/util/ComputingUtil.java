@@ -158,21 +158,38 @@ public class ComputingUtil {
     //4 -----------笛卡尔积-----------
     //三元组*三元组=九元组
     public static RelationBo prod(RelationBo r1, RelationBo r2) {
-        // 处理必要数据
+        //处理必要数据
         int rowLen = r1.getRowLen()*r2.getRowLen();
         int colLen = r1.getColLen()+r2.getColLen();
-        //整理列名
+        //整理列名(改）
+        //1.判断相同列
         String[] colName = new String[colLen];
         String[] r1ColName = r1.getColName();
         String[] r2ColName = r2.getColName();
+        //修改部分↓
+        boolean[] temp1 = new boolean[r1ColName.length];
+        boolean[] temp2 = new boolean[r2ColName.length];
+        for(int i=0;i<r1ColName.length;i++){
+            for(int j=0;j<r2ColName.length;j++){
+                if(Objects.equals(r1.getColName()[i],r2.getColName()[j])){
+                    temp1[i] = true;
+                    temp2[j] = true;
+                }
+            }
+        }
         int num = 0;
         for(int i=0;i<r1.getColLen();i++){
-            colName[num++] = r1ColName[i];
+            if(!temp1[i]){
+                colName[num++] = r1ColName[i];
+            }else{
+                colName[num++] = "r1的名字"+"."+r1ColName[i];
+            }
         }
         for(int i=0;i<r2.getColLen();i++){
             colName[num++] = r2ColName[i];
         }
-        // 双循环将所有情况加入字符串，然后再赋给新表
+        //修改部分↑
+        //双循环将所有情况加入字符串，然后再赋给新表
         String str = "";
         for(int i=0;i<r1.getRowLen();i++){
             for(int j=0;j<r2.getRowLen();j++){
@@ -192,6 +209,14 @@ public class ComputingUtil {
     //5 -----------投影-----------
     //取其中的指定列组成新表
     public static RelationBo project(RelationBo r, int[] cols) {
+        //-----修改部分：判断cols内列是否合法
+        int colNum = r.getColLen();
+        if(cols.length==0){
+
+        }
+        for(int i=0;i<cols.length;i++)
+            if(cols[i]>=colNum){}
+        //-----修改部分
         //5.1 遍历各行找指定列元素加入字符串str
         String str = "";
         for(int i=0;i<r.getRowLen();i++){
