@@ -1,4 +1,6 @@
-package com.example.operation_system.service.impl;
+package com.example.operation_system.service;
+
+import java.util.List;
 
 /**
  * @program: operation_system
@@ -7,5 +9,6 @@ package com.example.operation_system.service.impl;
  * @create: 2023-01-09 14:52
  **/
 public interface ParsingService {
-    boolean parsing(String expression);
+
+    boolean parsing(List<String> expression, String startSign);
 }

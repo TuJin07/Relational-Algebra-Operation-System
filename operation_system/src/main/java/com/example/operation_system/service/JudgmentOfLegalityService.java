@@ -7,5 +7,9 @@ package com.example.operation_system.service;
  * @create: 2023-01-09 14:05
  **/
 public interface JudgmentOfLegalityService {
+    /**
+     * @param expression 待计算的表达式
+     * @return 表达式是否合法
+     */
     boolean judgeLegality(String expression);
 }

@@ -3,6 +3,7 @@ package com.example.operation_system.service.impl;
 import com.example.operation_system.exception.IllegalInputException;
 import com.example.operation_system.service.JudgmentOfLegalityService;
 import com.example.operation_system.service.LexicalAnalysisService;
+import com.example.operation_system.service.ParsingService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -18,6 +19,9 @@ public class JudgmentOfLegalityServiceImpl implements JudgmentOfLegalityService 
 
     @Resource
     LexicalAnalysisService lexicalAnalysisService;
+
+    @Resource
+    ParsingService parsingService;
 
     @Override
     public boolean judgeLegality(String expression) {

@@ -1,9 +1,6 @@
 package com.example.operation_system.constant;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @program: operation_system
@@ -12,6 +9,8 @@ import java.util.Set;
  * @create: 2022-11-02 16:33
  **/
 public class Constant {
+
+    public static final String END_SIGN = "#";
 
     public static final String OR = "#or";
 
@@ -35,6 +34,12 @@ public class Constant {
 
     public static final String TEMP_RELATION_PREFIX = "TEMP";
 
+    public static final Map<String, Map<String, String>> PREDICTIVE_ANALYSIS_TABLE;
+
+    public static final Set<String> TERMINATOR;
+
+    public static final Set<String> NON_TERMINATOR;
+
     static {
         PRIORITY = new HashMap<>();
         PRIORITY.put("(", 0);
@@ -50,9 +55,16 @@ public class Constant {
         UNARY_OPERATOR = new HashSet<>();
         UNARY_OPERATOR.add(PROJECT);
         UNARY_OPERATOR.add(SELECT);
+
+        PREDICTIVE_ANALYSIS_TABLE = new HashMap<>();
+
+        TERMINATOR = new HashSet<>();
+        String[] temp = {
+                "∩","∪","−","×","⋈","÷","π","σ","∧","∨","(",")","[","]","≤","≥","≠",">","<","=",",","id","num"
+        };
+        TERMINATOR.addAll(Arrays.asList(temp));
+
+        NON_TERMINATOR = new HashSet<>();
     }
-
-
-
 
 }
