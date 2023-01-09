@@ -50,7 +50,7 @@ public class WebController {
             result = computingService.compute(input.get("expression"));
         } catch (ComputingException e) {
             log.error("[计算]计算异常", e);
-            return Result.fail("计算异常");
+            return Result.fail("计算失败");
         } catch (WrongColumnNameException e) {
             log.error("[计算]错误列名", e);
             return Result.fail("表达式中有不存在的列名");
@@ -60,6 +60,8 @@ public class WebController {
         } catch (RelationNotExistsException e) {
             log.error("[计算]存在未定义的关系", e);
             return Result.fail("表达式中存在未定义的关系");
+        } catch (Exception e) {
+            return Result.fail("异常");
         }
         return Result.success(result);
     }
