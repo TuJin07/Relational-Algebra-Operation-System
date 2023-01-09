@@ -65,6 +65,28 @@ public class Constant {
         TERMINATOR.addAll(Arrays.asList(temp));
 
         NON_TERMINATOR = new HashSet<>();
+
+        Map<String, String> cur;
+        // todo @manqi
+
+        cur = new HashMap<>();
+        // 将第一行数据记录，左边是最上面一行（列名），右边是值
+        cur.put("id", "CB");
+        cur.put("num", "ERROR");
+        cur.put("∪", "ERROR");
+        cur.put("∩", "ERROR");
+        // ....
+        // 完成后，按如下格式添加到“A”中（A是第一行的的行名），下次添加就是添加到“B”中，以此类推
+        PREDICTIVE_ANALYSIS_TABLE.put("A", cur);
+
+        // 开始录第二行，每次按如下格式初始化一下cur
+        cur = new HashMap<>();
+        cur.put("id", "ERROR");
+        cur.put("num", "ERROR");
+//        ....
+        PREDICTIVE_ANALYSIS_TABLE.put("B", cur);
+
+//        ...
     }
 
 }
