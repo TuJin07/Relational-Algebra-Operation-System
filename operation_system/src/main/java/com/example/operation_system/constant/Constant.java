@@ -1,5 +1,11 @@
 package com.example.operation_system.constant;
 
+import com.opencsv.CSVReader;
+import lombok.extern.slf4j.Slf4j;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -8,6 +14,7 @@ import java.util.*;
  * @author: Xuan
  * @create: 2022-11-02 16:33
  **/
+@Slf4j
 public class Constant {
 
     public static final String END_SIGN = "#";
@@ -59,34 +66,46 @@ public class Constant {
         PREDICTIVE_ANALYSIS_TABLE = new HashMap<>();
 
         TERMINATOR = new HashSet<>();
-        String[] temp = {
+        String[] temp1 = {
                 "∩","∪","−","×","⋈","÷","π","σ","∧","∨","(",")","[","]","≤","≥","≠",">","<","=",",","id","num"
         };
-        TERMINATOR.addAll(Arrays.asList(temp));
+        TERMINATOR.addAll(Arrays.asList(temp1));
 
         NON_TERMINATOR = new HashSet<>();
+        String[] temp2 = {
+                "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T"
+        };
+        NON_TERMINATOR.addAll(Arrays.asList(temp2));
 
-        Map<String, String> cur;
-        // todo @manqi
+        String csvFile = "../doc/预测分析表.csv";
+        CSVReader reader = null;
+        String[] column = {"id", "num", "∪", "∩", "−", "×", "⋈", "÷", "σ", "π", "(", ")", "[", "]", "=", ">", "≥", "<", "≤", "≠", "∧", "∨", ",", "#"};
+        String[] row = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T"};
+        int i = 0;
+        try {
+            reader = new CSVReader(new FileReader(csvFile));
+            String[] line;
+            while ((line = reader.readNext()) != null) {
+                Map<String, String> cur = new HashMap<>();
+                for (int j = 0; j < line.length; j++) {
+                    if (j == 0 && i == 0) {
+                        line[j] = line[j].substring(1, line[j].length());
+                    }
+                    if (line[j].equals("'")) {
+                        line[j] = "";
+                    }
+                    cur.put(column[j], line[j]);
+                }
+                PREDICTIVE_ANALYSIS_TABLE.put(row[i], cur);
+                i++;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-        cur = new HashMap<>();
-        // 将第一行数据记录，左边是最上面一行（列名），右边是值
-        cur.put("id", "CB");
-        cur.put("num", "ERROR");
-        cur.put("∪", "ERROR");
-        cur.put("∩", "ERROR");
-        // ....
-        // 完成后，按如下格式添加到“A”中（A是第一行的的行名），下次添加就是添加到“B”中，以此类推
-        PREDICTIVE_ANALYSIS_TABLE.put("A", cur);
-
-        // 开始录第二行，每次按如下格式初始化一下cur
-        cur = new HashMap<>();
-        cur.put("id", "ERROR");
-        cur.put("num", "ERROR");
-//        ....
-        PREDICTIVE_ANALYSIS_TABLE.put("B", cur);
-
-//        ...
+    public static void main(String[] args) {
+        System.out.println(Constant.PREDICTIVE_ANALYSIS_TABLE);
     }
 
 }

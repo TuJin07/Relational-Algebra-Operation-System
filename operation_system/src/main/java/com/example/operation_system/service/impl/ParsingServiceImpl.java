@@ -17,6 +17,7 @@ public class ParsingServiceImpl implements ParsingService {
 
     @Override
     public boolean parsing(List<String> expression, String startSign) {
+        expression.add("#");
         Deque<String> stack = new ArrayDeque<>();
         stack.push(Constant.END_SIGN);
         stack.push(startSign);
@@ -58,9 +59,30 @@ public class ParsingServiceImpl implements ParsingService {
             return false;
         }
         char[] charArray = derivative.toCharArray();
-        for (int i = charArray.length - 1; i >= 0; i--) {
-            stack.push(String.valueOf(charArray[i]));
+        int j = charArray.length, i = charArray.length - 1;
+        while (i >= 0) {
+            String tmp = new String(charArray, i, j - i);
+            if (Constant.NON_TERMINATOR.contains(tmp) || Constant.TERMINATOR.contains(tmp)) {
+                stack.push(tmp);
+                j = i;
+                i--;
+            } else {
+                i--;
+            }
         }
         return true;
+    }
+
+    public static void main(String[] args) {
+        LexicalAnalysisServiceImpl analysisService = new LexicalAnalysisServiceImpl();
+        ParsingServiceImpl parsingService = new ParsingServiceImpl();
+        String expression = "σ[A=10.50][A∩Student∪B−(C×Course)⋈σ[A=10.50][Go]×π[Sno,Cno12][B]×σ[A=AB∧B=20∨C=39][A∩B]]";
+//        String expression = "A∩";
+        analysisService.analysis(expression);
+        List<String> array = analysisService.getResult();
+        char start = 'A';
+        for (int i = 0; start + i <= 'T'; i++) {
+            System.out.println(parsingService.parsing(array, String.valueOf((char)(start + i))));
+        }
     }
 }
