@@ -403,6 +403,10 @@ public class ComputingUtil {
         }
         // 空表直接返回原表
         if (r.getRowLen() == 0) {
+            if(r.getColLen()==0){
+                if(!Objects.equals(conditions,"")) throw new WrongColumnNameException();
+                else return r;
+            }
             return r;
         }
         List<String> post = parsePostExpression(conditions);
