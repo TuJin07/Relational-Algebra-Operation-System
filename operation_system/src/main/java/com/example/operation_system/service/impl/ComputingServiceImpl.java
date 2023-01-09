@@ -2,10 +2,7 @@ package com.example.operation_system.service.impl;
 
 import com.example.operation_system.bo.RelationBo;
 import com.example.operation_system.constant.Constant;
-import com.example.operation_system.exception.ComputingException;
-import com.example.operation_system.exception.IllegalOperationException;
-import com.example.operation_system.exception.ParamLenException;
-import com.example.operation_system.exception.WrongColumnNameException;
+import com.example.operation_system.exception.*;
 import com.example.operation_system.service.ComputingService;
 import com.example.operation_system.service.RelationService;
 import com.example.operation_system.util.ComputingUtil;
@@ -33,7 +30,7 @@ public class ComputingServiceImpl implements ComputingService {
     private int relationCount = 0;
 
     @Override
-    public RelationVo compute(String expression) throws ComputingException, WrongColumnNameException, IllegalOperationException {
+    public RelationVo compute(String expression) throws ComputingException, WrongColumnNameException, IllegalOperationException, RelationNotExistsException {
         relationCount = 0;
         RelationBo result = calculate(expression);
         if (result == null) {
@@ -48,7 +45,7 @@ public class ComputingServiceImpl implements ComputingService {
      * @param expression
      * @return
      */
-    private RelationBo calculate(String expression) throws ComputingException, WrongColumnNameException, IllegalOperationException {
+    private RelationBo calculate(String expression) throws ComputingException, WrongColumnNameException, IllegalOperationException, RelationNotExistsException {
         List<String> post = null;
         try {
             post = parse(expression);
@@ -61,6 +58,9 @@ public class ComputingServiceImpl implements ComputingService {
            if (relationService.contains(elem)) {
                stack.push(relationService.get(elem));
                continue;
+           }
+           if (elem.charAt(0) != '#') {
+               throw new RelationNotExistsException();
            }
            RelationBo bo1 = stack.poll(), bo2 = stack.poll();
            if (bo1 == null || bo2 == null) {
@@ -103,7 +103,7 @@ public class ComputingServiceImpl implements ComputingService {
      * @param expression
      * @return
      */
-    private List<String> parse(String expression) throws ComputingException, ParamLenException, WrongColumnNameException, IllegalOperationException {
+    private List<String> parse(String expression) throws ComputingException, ParamLenException, WrongColumnNameException, IllegalOperationException, RelationNotExistsException {
 //        String[] elems = expression.split(" ");
         String[] elems = splitExpression(expression);
         List<String> res = new ArrayList<>();
@@ -176,7 +176,7 @@ public class ComputingServiceImpl implements ComputingService {
         return res;
     }
 
-    private int preprocessingUnaryOperator(List<String> res, int tempCount, String elem) throws ComputingException, ParamLenException, WrongColumnNameException, IllegalOperationException {
+    private int preprocessingUnaryOperator(List<String> res, int tempCount, String elem) throws ComputingException, ParamLenException, WrongColumnNameException, IllegalOperationException, RelationNotExistsException {
 
         // 第0个参数为关系（或是嵌套表达式），其余参数为运算的参数
         String[] params = getParam(elem);

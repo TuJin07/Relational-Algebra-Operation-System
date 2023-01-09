@@ -3,6 +3,7 @@ package com.example.operation_system.controller;
 import com.example.operation_system.exception.*;
 import com.example.operation_system.response.Result;
 import com.example.operation_system.service.ComputingService;
+import com.example.operation_system.service.JudgmentOfLegalityService;
 import com.example.operation_system.service.RelationService;
 import com.example.operation_system.vo.RelationVo;
 import lombok.extern.slf4j.Slf4j;
@@ -31,12 +32,19 @@ public class WebController {
     @Resource
     private RelationService relationService;
 
+    @Resource
+    private JudgmentOfLegalityService judgmentOfLegalityService;
+
     /**
      * 计算表达式结果并返回
      * @return
      */
     @RequestMapping(value = "/api/compute/", method = RequestMethod.POST)
     public Result getCalculationResult(@RequestBody Map<String, String> input) {
+//        boolean isLegal = judgmentOfLegalityService.judgeLegality(input.get("original_expression"));
+//        if (!isLegal) {
+//            return Result.fail("表达式格式不合法");
+//        }
         RelationVo result = null;
         try {
             result = computingService.compute(input.get("expression"));
@@ -49,6 +57,9 @@ public class WebController {
         } catch (IllegalOperationException e) {
             log.error("[计算]不合法计算", e);
             return Result.fail("存在不合法的运算，如：结构不同的两个表进行交并差运算等");
+        } catch (RelationNotExistsException e) {
+            log.error("[计算]存在未定义的关系", e);
+            return Result.fail("表达式中存在未定义的关系");
         }
         return Result.success(result);
     }
@@ -76,7 +87,7 @@ public class WebController {
             relationService.insertRelation(vo);
         } catch (ParamLenException e) {
             log.error("[新增关系]参数异常", e);
-            return Result.fail("关系的表内容与行列不匹配");
+            return Result.fail("关系的内容与行列不匹配");
         } catch (RelationAlreadyExistsException e) {
             log.error("[新增关系]已存在同名关系", e);
             return Result.fail("已存在同名关系");
