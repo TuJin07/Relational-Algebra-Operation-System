@@ -81,7 +81,7 @@ public class ComputingServiceImpl implements ComputingService {
                    res = ComputingUtil.or(bo1, bo2);
                    break;
                case Constant.PROD:
-                   res = ComputingUtil.prod(bo1, bo2, relationCount);
+                   res = ComputingUtil.prod(bo2, bo1, relationCount);
                    relationCount += 2;
                    break;
                case Constant.DIFF:

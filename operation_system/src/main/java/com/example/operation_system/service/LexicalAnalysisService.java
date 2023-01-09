@@ -1,5 +1,7 @@
 package com.example.operation_system.service;
 
+import java.util.List;
+
 /**
  * @program: operation_system
  * @description:
@@ -8,4 +10,6 @@ package com.example.operation_system.service;
  **/
 public interface LexicalAnalysisService {
     boolean analysis(String expression);
+
+    List<String> getResult();
 }
