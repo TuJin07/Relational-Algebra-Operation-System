@@ -61,7 +61,8 @@ public class WebController {
             log.error("[计算]存在未定义的关系", e);
             return Result.fail("表达式中存在未定义的关系");
         } catch (Exception e) {
-            return Result.fail("异常");
+            log.error("内部异常", e);
+            return Result.fail("内部异常");
         }
         return Result.success(result);
     }
