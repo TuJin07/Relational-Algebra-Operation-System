@@ -2,6 +2,7 @@ package com.example.operation_system.service.impl;
 
 import com.example.operation_system.constant.Constant;
 import com.example.operation_system.service.ParsingService;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -13,6 +14,7 @@ import java.util.List;
  * @author: Xuan
  * @create: 2023-01-09 20:15
  **/
+@Service
 public class ParsingServiceImpl implements ParsingService {
 
     @Override

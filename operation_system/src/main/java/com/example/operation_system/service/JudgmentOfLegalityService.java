@@ -1,5 +1,8 @@
 package com.example.operation_system.service;
 
+import com.example.operation_system.exception.LexicalAnalysisException;
+import com.example.operation_system.exception.ParsingException;
+
 /**
  * @program: operation_system
  * @description: 表达式合法性判断
@@ -9,7 +12,6 @@ package com.example.operation_system.service;
 public interface JudgmentOfLegalityService {
     /**
      * @param expression 待计算的表达式
-     * @return 表达式是否合法
      */
-    boolean judgeLegality(String expression);
+    void judgeLegality(String expression) throws LexicalAnalysisException, ParsingException;
 }
