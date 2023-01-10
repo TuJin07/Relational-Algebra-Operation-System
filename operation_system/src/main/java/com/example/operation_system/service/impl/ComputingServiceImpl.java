@@ -235,7 +235,7 @@ public class ComputingServiceImpl implements ComputingService {
 
     public static void main(String[] args) {
         ComputingServiceImpl csi = new ComputingServiceImpl();
-        String expression = "A #and B #or #select[A #diff B #and #project[A #and B,a,1],a=1,1] #prod C";
+        String expression = "π[Sname][σ[Grade<70][Student⋈Course⋈SC]]";
         System.out.println(Arrays.toString(csi.splitExpression(expression)));
     }
 }
