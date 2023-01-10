@@ -198,13 +198,14 @@ export default {
     },
     // 提交按钮
     submit () {
-      let ans = this.expression
-      console.log(ans)
-      ans = this.nest(ans)
+      let exp = this.expression
+      console.log(exp)
+      let ans = this.nest(exp)
       console.log(ans)
       this.$axios
         .post('/compute/', {
-          'expression': ans
+          'expression': ans,
+          'original_expression': exp
         })
         .then(successResponse => {
           if (successResponse.data.code === 200) {
