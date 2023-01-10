@@ -41,10 +41,13 @@ public class WebController {
      */
     @RequestMapping(value = "/api/compute/", method = RequestMethod.POST)
     public Result getCalculationResult(@RequestBody Map<String, String> input) {
-//        boolean isLegal = judgmentOfLegalityService.judgeLegality(input.get("original_expression"));
-//        if (!isLegal) {
-//            return Result.fail("表达式格式不合法");
-//        }
+        try {
+            judgmentOfLegalityService.judgeLegality(input.get("original_expression"));
+        } catch (LexicalAnalysisException e) {
+            return Result.fail("词法分析不通过，检查是否有不合法的标识符或运算符");
+        } catch (ParsingException e) {
+            return Result.fail("语法分析不通过，检查运算符之间的连接是否合法");
+        }
         RelationVo result = null;
         try {
             result = computingService.compute(input.get("expression"));
@@ -97,6 +100,12 @@ public class WebController {
         } catch (RepeatedColumnNameException e) {
             log.error("[新增关系]存在同名列", e);
             return Result.fail("关系中存在同名列");
+        } catch (IllegalColumnNameException e) {
+            log.error("[新增关系]列名不符合要求");
+            return Result.fail("列名不符合格式要求");
+        } catch (IllegalRelationNameException e) {
+            log.error("[新增关系]表名不符合要求");
+            return Result.fail("表名不符合格式要求");
         }
         return Result.success();
     }
