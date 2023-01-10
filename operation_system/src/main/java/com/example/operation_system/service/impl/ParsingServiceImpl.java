@@ -77,12 +77,8 @@ public class ParsingServiceImpl implements ParsingService {
         LexicalAnalysisServiceImpl analysisService = new LexicalAnalysisServiceImpl();
         ParsingServiceImpl parsingService = new ParsingServiceImpl();
         String expression = "σ[A=10.50][A∩Student∪B−(C×Course)⋈σ[A=10.50][Go]×π[Sno,Cno12][B]×σ[A=AB∧B=20∨C=39][A∩B]]";
-//        String expression = "A∩";
         analysisService.analysis(expression);
         List<String> array = analysisService.getResult();
-        char start = 'A';
-        for (int i = 0; start + i <= 'T'; i++) {
-            System.out.println(parsingService.parsing(array, String.valueOf((char)(start + i))));
-        }
+        System.out.println(parsingService.parsing(array, String.valueOf('A')));
     }
 }
