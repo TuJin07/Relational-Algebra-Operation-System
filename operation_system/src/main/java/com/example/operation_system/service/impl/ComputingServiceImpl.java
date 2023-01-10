@@ -165,8 +165,9 @@ public class ComputingServiceImpl implements ComputingService {
         StringBuilder sb = new StringBuilder();
         int j = 0, k = 0;
         for (j = 0; j < temp.length - 1 - paramLen; j++) {
-            sb.append(temp[j]);
+            sb.append(temp[j]).append(",");
         }
+        sb.deleteCharAt(sb.length() - 1);
         result.add(sb.toString());
         for (k = j; k < temp.length - 1; k++) {
             result.add(temp[k]);
@@ -235,7 +236,9 @@ public class ComputingServiceImpl implements ComputingService {
 
     public static void main(String[] args) {
         ComputingServiceImpl csi = new ComputingServiceImpl();
-        String expression = "π[Sname][σ[Grade<70][Student⋈Course⋈SC]]";
-        System.out.println(Arrays.toString(csi.splitExpression(expression)));
+//        String str = "#project[#select[Student #join Course #join SC,Grade<70,1],Sname,1]";
+//        String str = "#project[A #and B #join C,Sname,Sno,2]";
+        String str = "#select[Student #join Course #join SC,Grade<70,1]";
+        csi.getParam(str);
     }
 }
