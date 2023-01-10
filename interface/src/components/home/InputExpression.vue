@@ -12,7 +12,11 @@
       ></el-input>
     </el-form-item>
     <el-form-item>
-      <el-button v-for="button in buttons" :key="button.key"
+      <el-button v-for="button in buttons1" :key="button.key"
+                 @click="labClick(button.name)"
+      >{{button.name}}</el-button>
+      <br>
+      <el-button v-for="button in buttons2" :key="button.key"
                  @click="labClick(button.name)"
       >{{button.name}}</el-button>
     </el-form-item>
@@ -48,7 +52,7 @@ export default {
     return {
       cursorIndex: '',
       expression: '',
-      buttons: [{
+      buttons1: [{
         name: '∪'
       }, {
         name: '∩'
@@ -64,10 +68,15 @@ export default {
         name: '⋈'
       }, {
         name: '÷'
-      }, {
+      }],
+      buttons2: [{
         name: '∧'
       }, {
         name: '∨'
+      }, {
+        name: '≥'
+      }, {
+        name: '≤'
       }],
       list: [{
         id: '',
@@ -143,24 +152,52 @@ export default {
         else if (n === '÷') ans = s.substring(0, i) + ' #div ' + s.substring(i + 1, s.length)
         else if (n === 'σ' || n === 'π') {
           let x = n
+          let flag = 0
           while (n !== '[') {
+            if (i >= ans.length) {
+              flag = 1
+              break
+            }
             i++
             n = ans[i]
           }
           let x1 = i + 1
           while (n !== ']') {
+            if (i >= ans.length) {
+              flag = 1
+              break
+            }
             i++
             n = ans[i]
           }
           let x2 = i - 1
           while (n !== '[') {
+            if (i >= ans.length) {
+              flag = 1
+              break
+            }
             i++
             n = ans[i]
           }
           let x3 = i + 1
           while (n !== ']') {
+            if (i >= ans.length) {
+              flag = 1
+              break
+            }
             i++
             n = ans[i]
+          }
+          if (flag === 1) {
+            this.$alert('输入表达式格式有误！', '计算表达式', {
+              confirmButtonText: '确定',
+              callback: action => {
+                this.$message({
+                  type: 'info',
+                  message: `action: ${action}`
+                })
+              }
+            })
           }
           let x4 = i - 1
           let exp = s.substring(x1, x2 + 1)

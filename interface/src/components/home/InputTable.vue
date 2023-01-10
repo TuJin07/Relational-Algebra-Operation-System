@@ -6,7 +6,7 @@
       <el-form-item v-for="domain in domains" :key="domain.key">
         <el-row>
           关系
-          <el-input v-model="domain.name" style="width: 18%" placeholder="关系名（字母开头）" :disabled="domain.dis"/>
+          <el-input v-model="domain.name" style="width: 20%" placeholder="关系名（字母开头）" :disabled="domain.dis"/>
           <el-input v-model="domain.row" style="width: 18%" placeholder="行数/元组数" :disabled="domain.dis"/>
           <el-input v-model="domain.col" style="width: 18%" placeholder="列数/属性数" :disabled="domain.dis"/>
           <el-button @click="submit(domain)" :disabled="domain.dis">确认关系</el-button>
