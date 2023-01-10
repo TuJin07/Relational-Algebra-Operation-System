@@ -68,6 +68,10 @@ export default {
         name: '⋈'
       }, {
         name: '÷'
+      }, {
+        name: '('
+      }, {
+        name: ')'
       }],
       buttons2: [{
         name: '∧'
