@@ -80,7 +80,15 @@ export default {
       }, {
         name: '≥'
       }, {
+        name: '>'
+      }, {
         name: '≤'
+      }, {
+        name: '<'
+      }, {
+        name: '='
+      }, {
+        name: '≠'
       }],
       list: [{
         id: '',
@@ -157,6 +165,7 @@ export default {
         else if (n === 'σ' || n === 'π') {
           let x = n
           let flag = 0
+          let cnt = 0
           while (n !== '[') {
             if (i >= ans.length) {
               flag = 1
@@ -183,14 +192,17 @@ export default {
             i++
             n = ans[i]
           }
-          let x3 = i + 1
-          while (n !== ']') {
+          let x3 = i + 1 // 第一个[后一位
+          while (true) {
+            i++
+            n = ans[i]
             if (i >= ans.length) {
               flag = 1
               break
             }
-            i++
-            n = ans[i]
+            if (n === ']' && cnt === 0) break
+            else if (n === ']') cnt--
+            if (n === '[') cnt++
           }
           if (flag === 1) {
             this.$alert('输入表达式格式有误！', '计算表达式', {
@@ -203,7 +215,7 @@ export default {
               }
             })
           }
-          let x4 = i - 1
+          let x4 = i - 1 // 匹配的]前一位
           let exp = s.substring(x1, x2 + 1)
           let list = s.substring(x3, x4 + 1)
           // 处理条件式
@@ -214,6 +226,9 @@ export default {
             else if (m === ')') exp = str.substring(0, k) + '|' + str.substring(k, str.length)
             else if (m === '∧') exp = str.substring(0, k) + '|$and|' + str.substring(k + 1, str.length)
             else if (m === '∨') exp = str.substring(0, k) + '|$or|' + str.substring(k + 1, str.length)
+            else if (m === '≤') exp = str.substring(0, k) + '<=' + str.substring(k + 1, str.length)
+            else if (m === '≥') exp = str.substring(0, k) + '>=' + str.substring(k + 1, str.length)
+            else if (m === '≠') exp = str.substring(0, k) + '!=' + str.substring(k + 1, str.length)
           }
           // 嵌套处理表
           list = this.nest(list)
