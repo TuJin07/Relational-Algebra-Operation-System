@@ -310,7 +310,7 @@ public class LexicalAnalysisServiceImpl implements LexicalAnalysisService {
 
     public static void main(String[] args) {
         LexicalAnalysisService service = new LexicalAnalysisServiceImpl();
-        String expression = "A∩Student∪B−(C×Course)⋈σ[A=10.50][Go]×π[Sno,Cno12][B]×σ[A=10AB∧B=20∨C=39][A∩B]";
+        String expression = "σ[Cname=操作系统∧Grade≥70][Student⋈Course⋈SC]";
 //        String expression = "A";
         service.analysis(expression);
         System.out.println(service.getResult());
