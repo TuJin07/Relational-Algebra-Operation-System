@@ -84,26 +84,26 @@ export default {
       },
       Student: [{
         Sno: '95001',
-        Sname: '李勇',
-        Ssex: '男',
+        Sname: 'LiHua',
+        Ssex: 'Male',
         Sage: '20'
       }, {
         Sno: '95002',
-        Sname: '刘晨',
-        Ssex: '女',
+        Sname: 'LiuFang',
+        Ssex: 'Female',
         Sage: '19'
       }],
       Course: [{
         Cno: '1',
-        Cname: '数据库',
+        Cname: 'DataBase',
         Ccredit: '4'
       }, {
         Cno: '2',
-        Cname: '操作系统',
+        Cname: 'OperationSystem',
         Ccredit: '3'
       }, {
         Cno: '3',
-        Cname: '数据结构',
+        Cname: 'DateStructure',
         Ccredit: '4'
       }],
       SC: [{
@@ -133,7 +133,7 @@ export default {
           'row_len': 2,
           'col_len': 4,
           'col_name': 'Sno,Sname,Ssex,Sage',
-          'content': '95001,李勇,男,20,95002,刘晨,女,19'
+          'content': '95001,LiHua,Male,20,95002,LiuCheng,Female,19'
         })
         .then(successResponse => {
           if (successResponse.data.code === 200) {
@@ -157,7 +157,7 @@ export default {
           'row_len': 3,
           'col_len': 3,
           'col_name': 'Cno,Cname,Ccredit',
-          'content': '1,数据库,4,2,操作系统,3,3,数据结构,4'
+          'content': '1,DataBase,4,2,OperationSystem,3,3,DateStructure,4'
         })
         .then(successResponse => {
           if (successResponse.data.code === 200) {
